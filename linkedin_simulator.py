@@ -1,5 +1,7 @@
 from PIL import Image
 import streamlit as st
+import base64
+from io import BytesIO
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -8,12 +10,27 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Chargement du logo ---
-logo = Image.open('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
-st.image(logo, width=150)
+# --- Fonction pour encoder l'image en base64 ---
+def get_image_base64(image_path):
+    img = Image.open(image_path)
+    buffer = BytesIO()
+    img.save(buffer, format='PNG')
+    img_str = base64.b64encode(buffer.getvalue()).decode()
+    return img_str
 
-# --- Titre de l'application ---
-st.title("Simulateur de Performance LinkedIn")
+# --- Chargement et encodage du logo ---
+logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
+
+# --- Affichage du logo et du titre ---
+st.markdown(
+    f"""
+    <div style='display: flex; align-items: center;'>
+        <img src='data:image/png;base64,{logo_base64}' width='150' style='margin-right: 20px;'/>
+        <h1>Simulateur de Performance LinkedIn</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # --- Description de l'application ---
 st.markdown("""
@@ -230,19 +247,19 @@ with col2:
     st.subheader("Conseils pour améliorer la performance")
     if engagement_rate < 5:
         st.write("""
-        - Engagez davantage vos abonnés : posez des questions ou invitez-les à donner leur avis dans les commentaires.
-        - Répondez à tous les commentaires : encouragez la discussion pour maintenir l'engagement.
-        - Partagez le post à des moments stratégiques : essayez de publier quand vos abonnés sont les plus actifs.
+        - **Engagez davantage vos abonnés** : posez des questions ou invitez-les à donner leur avis dans les commentaires.
+        - **Répondez à tous les commentaires** : encouragez la discussion pour maintenir l'engagement.
+        - **Partagez le post à des moments stratégiques** : essayez de publier quand vos abonnés sont les plus actifs.
         """)
     elif engagement_rate < 10:
         st.write("""
-        - Vous êtes sur la bonne voie ! Pour améliorer encore, essayez d'augmenter les interactions en ajoutant des questions ouvertes.
-        - Faites des mentions ou tags pour encourager les réponses de certains abonnés.
+        - **Vous êtes sur la bonne voie !** Pour améliorer encore, essayez d'augmenter les interactions en ajoutant des questions ouvertes.
+        - **Faites des mentions ou tags** pour encourager les réponses de certains abonnés.
         """)
     else:
         st.write("""
-        - Excellent travail ! Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
-        - Encouragez le partage du post pour atteindre encore plus d'abonnés.
+        - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
+        - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
         """)
 
 # --- Footer ---
