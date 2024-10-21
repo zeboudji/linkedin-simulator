@@ -2,7 +2,7 @@ from PIL import Image
 import streamlit as st
 import base64
 from io import BytesIO
-import pandas as pd  # Assurez-vous d'importer pandas si vous utilisez des graphiques
+import pandas as pd  # Si vous utilisez des graphiques
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -30,7 +30,7 @@ logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemi
 st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
-        <img src='data:image/png;base64,{logo_base64}' width='50' style='margin-right: 20px;'/>
+        <img src='data:image/png;base64,{logo_base64}' width='100' style='margin-right: 20px;'/>
         <h1 style='color: var(--textColor);'>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
@@ -250,7 +250,7 @@ with col2:
         hours_since_posted == default_values['hours_since_posted']):
         st.info("En attente de vos paramètres...")
     else:
-        # Indicateurs de vos Performance
+        # Indicateurs de Performance
         st.subheader("Indicateurs de Performance")
         
         # Utilisation de st.metric pour les indicateurs clés
@@ -300,16 +300,16 @@ with col2:
         st.markdown(
             f"""
             <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
-                <div style='display: flex; justify-content: space-around; align-items: center;'>
-                    <div style='text-align: center;'>
+                <div style='display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;'>
+                    <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>👍</span><br>
                         <strong>{ideal_likes:.0f} Likes</strong>
                     </div>
-                    <div style='text-align: center;'>
+                    <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>💬</span><br>
                         <strong>{ideal_comments:.0f} Commentaires</strong>
                     </div>
-                    <div style='text-align: center;'>
+                    <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>🔗</span><br>
                         <strong>{ideal_shares:.0f} Partages</strong>
                     </div>
