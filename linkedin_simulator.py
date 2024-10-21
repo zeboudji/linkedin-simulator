@@ -286,6 +286,10 @@ with col2:
 # --- Footer ---
 st.write("---")
 st.markdown(
-    "<div style='text-align: center;'>Développé avec ❤️ par votre IA. Améliorez vos performances LinkedIn grâce à des projections intelligentes !</div>",
+    """
+    <div style='text-align: center;'>
+        Développé à l'aide d'une IA sur la base du <a href='https://www.elorezo.com/r%C3%A9ussir-son-buzz-sur-linkedin-combien-faut-il-de-likes-pour-combien-de-vues' target='_blank'>blog</a> d'Antoine Jambart.
+    </div>
+    """,
     unsafe_allow_html=True
 )
