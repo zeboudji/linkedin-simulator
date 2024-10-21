@@ -2,7 +2,7 @@ from PIL import Image
 import streamlit as st
 
 # Ajout du logo
-logo = Image.open('linkedin_logo.png')  # Remplace par 'images/logo.png' si tu as mis le logo dans un sous-dossier
+logo = Image.open('logo.png')  # Remplace par 'images/logo.png' si tu as mis le logo dans un sous-dossier
 st.image(logo, width=150)
 
 # Titre de l'application
@@ -21,20 +21,36 @@ col1, col2 = st.columns(2)
 with col1:
     st.write("### Ajustez les paramètres ci-dessous")
     
-    followers = st.slider("Nombre d'abonnés", min_value=0, max_value=100000, value=5000, step=500)
-    followers_manual = st.number_input("Saisie manuelle - Nombre d'abonnés", min_value=0, max_value=100000, value=followers, step=500)
+    followers_manual = st.number_input("Nombre d'abonnés", min_value=0, max_value=100000, value=5000, step=500)
+    followers = st.slider("Nombre d'abonnés (Curseur)", min_value=0, max_value=100000, value=followers_manual, step=500)
     
-    likes = st.slider("Nombre de likes", min_value=0, max_value=1000, value=50, step=10)
-    likes_manual = st.number_input("Saisie manuelle - Nombre de likes", min_value=0, max_value=1000, value=likes, step=10)
+    # Synchroniser le curseur et la saisie manuelle
+    followers = followers_manual if followers_manual != followers else followers
+    followers_manual = followers
     
-    comments = st.slider("Nombre de commentaires", min_value=0, max_value=500, value=10, step=5)
-    comments_manual = st.number_input("Saisie manuelle - Nombre de commentaires", min_value=0, max_value=500, value=comments, step=5)
+    likes_manual = st.number_input("Nombre de likes", min_value=0, max_value=1000, value=50, step=10)
+    likes = st.slider("Nombre de likes (Curseur)", min_value=0, max_value=1000, value=likes_manual, step=10)
     
-    shares = st.slider("Nombre de partages", min_value=0, max_value=200, value=5, step=5)
-    shares_manual = st.number_input("Saisie manuelle - Nombre de partages", min_value=0, max_value=200, value=shares, step=5)
+    likes = likes_manual if likes_manual != likes else likes
+    likes_manual = likes
     
-    views = st.slider("Nombre de vues générées", min_value=0, max_value=100000, value=5000, step=500)
-    views_manual = st.number_input("Saisie manuelle - Nombre de vues générées", min_value=0, max_value=100000, value=views, step=500)
+    comments_manual = st.number_input("Nombre de commentaires", min_value=0, max_value=500, value=10, step=5)
+    comments = st.slider("Nombre de commentaires (Curseur)", min_value=0, max_value=500, value=comments_manual, step=5)
+    
+    comments = comments_manual if comments_manual != comments else comments
+    comments_manual = comments
+    
+    shares_manual = st.number_input("Nombre de partages", min_value=0, max_value=200, value=5, step=5)
+    shares = st.slider("Nombre de partages (Curseur)", min_value=0, max_value=200, value=shares_manual, step=5)
+    
+    shares = shares_manual if shares_manual != shares else shares
+    shares_manual = shares
+    
+    views_manual = st.number_input("Nombre de vues générées", min_value=0, max_value=100000, value=5000, step=500)
+    views = st.slider("Nombre de vues générées (Curseur)", min_value=0, max_value=100000, value=views_manual, step=500)
+    
+    views = views_manual if views_manual != views else views
+    views_manual = views
     
     hours_since_posted = st.slider("Temps écoulé depuis la publication (en heures)", min_value=1, max_value=48, value=10)
 
@@ -99,3 +115,4 @@ else:
 # Footer
 st.write("---")
 st.write("Développé avec ❤️ par votre IA. Améliorez vos performances LinkedIn grâce à des projections intelligentes !")
+
