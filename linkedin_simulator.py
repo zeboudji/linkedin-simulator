@@ -89,7 +89,39 @@ with col1:
         args=('followers_slider', 'followers_input')
     )
     st.divider()
+   # Nombre de vues générées
+    st.subheader("Nombre de vues générées")
+    st.number_input(
+        "Entrez le nombre de vues",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.views,
+        step=500,
+        key='views_input',
+        on_change=sync_input_with_slider,
+        args=('views_input', 'views_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.views,
+        step=500,
+        key='views_slider',
+        on_change=sync_slider_with_input,
+        args=('views_slider', 'views_input')
+    )
+    st.divider()
 
+    # Temps écoulé depuis la publication
+    st.subheader("Temps écoulé depuis la publication (heures)")
+    st.slider(
+        "Temps écoulé (heures)",
+        min_value=1,
+        max_value=48,
+        value=st.session_state.hours_since_posted,
+        key='hours_since_posted'
+    )
     # Nombre de likes
     st.subheader("Nombre de likes")
     st.number_input(
@@ -162,39 +194,7 @@ with col1:
     )
     st.divider()
 
-    # Nombre de vues générées
-    st.subheader("Nombre de vues générées")
-    st.number_input(
-        "Entrez le nombre de vues",
-        min_value=0,
-        max_value=100_000,
-        value=st.session_state.views,
-        step=500,
-        key='views_input',
-        on_change=sync_input_with_slider,
-        args=('views_input', 'views_slider')
-    )
-    st.slider(
-        "",
-        min_value=0,
-        max_value=100_000,
-        value=st.session_state.views,
-        step=500,
-        key='views_slider',
-        on_change=sync_slider_with_input,
-        args=('views_slider', 'views_input')
-    )
-    st.divider()
-
-    # Temps écoulé depuis la publication
-    st.subheader("Temps écoulé depuis la publication (heures)")
-    st.slider(
-        "Temps écoulé (heures)",
-        min_value=1,
-        max_value=48,
-        value=st.session_state.hours_since_posted,
-        key='hours_since_posted'
-    )
+ 
 
 # --- Récupération des valeurs synchronisées ---
 followers = st.session_state.followers_input
