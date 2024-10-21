@@ -18,13 +18,13 @@ Vous pouvez ajuster les valeurs avec les curseurs ou entrer manuellement les don
 if 'followers' not in st.session_state:
     st.session_state.followers = 5000
 if 'likes' not in st.session_state:
-    st.session_state.likes = 50
+    st.session_state.likes = 0
 if 'comments' not in st.session_state:
-    st.session_state.comments = 10
+    st.session_state.comments = 0
 if 'shares' not in st.session_state:
-    st.session_state.shares = 5
+    st.session_state.shares = 0
 if 'views' not in st.session_state:
-    st.session_state.views = 5000
+    st.session_state.views = 1000
 
 # Fonction pour synchroniser les widgets
 def sync_followers():
