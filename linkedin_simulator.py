@@ -25,7 +25,7 @@ logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemi
 st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
-        <img src='data:image/png;base64,{logo_base64}' width='50' style='margin-right: 20px;'/>
+        <img src='data:image/png;base64,{logo_base64}' width='150' style='margin-right: 20px;'/>
         <h1>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
@@ -66,7 +66,7 @@ col1, col2 = st.columns([1, 1])
 with col1:
     st.header("Paramètres")
 
-    # Quel est votre nombre d'abonnés
+    # Nombre d'abonnés
     st.subheader("Nombre d'abonnés")
     st.number_input(
         "Entrez le nombre d'abonnés",
@@ -88,9 +88,9 @@ with col1:
         on_change=sync_slider_with_input,
         args=('followers_slider', 'followers_input')
     )
-    st.write("---")
+    st.divider()
 
-    # Quel est le nombre de likes sur votre post ?
+    # Nombre de likes
     st.subheader("Nombre de likes")
     st.number_input(
         "Entrez le nombre de likes",
@@ -112,9 +112,9 @@ with col1:
         on_change=sync_slider_with_input,
         args=('likes_slider', 'likes_input')
     )
-    st.write("---")
+    st.divider()
 
-    # Quel est le nombre de commentaires ?
+    # Nombre de commentaires
     st.subheader("Nombre de commentaires")
     st.number_input(
         "Entrez le nombre de commentaires",
@@ -136,9 +136,9 @@ with col1:
         on_change=sync_slider_with_input,
         args=('comments_slider', 'comments_input')
     )
-    st.write("---")
+    st.divider()
 
-    # Quel est le nombre de partages ?
+    # Nombre de partages
     st.subheader("Nombre de partages")
     st.number_input(
         "Entrez le nombre de partages",
@@ -160,9 +160,9 @@ with col1:
         on_change=sync_slider_with_input,
         args=('shares_slider', 'shares_input')
     )
-    st.write("---")
+    st.divider()
 
-    # Quel est le nombre de vues (impressions) générées ?
+    # Nombre de vues générées
     st.subheader("Nombre de vues générées")
     st.number_input(
         "Entrez le nombre de vues",
@@ -184,14 +184,14 @@ with col1:
         on_change=sync_slider_with_input,
         args=('views_slider', 'views_input')
     )
-    st.write("---")
+    st.divider()
 
     # Temps écoulé depuis la publication
     st.subheader("Temps écoulé depuis la publication (heures)")
     st.slider(
         "Temps écoulé (heures)",
         min_value=1,
-        max_value=72,
+        max_value=48,
         value=st.session_state.hours_since_posted,
         key='hours_since_posted'
     )
@@ -212,15 +212,19 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 if views < 500:
     performance = "Médiocre"
     performance_color = "red"
+    performance_icon = "😟"
 elif 500 <= views < 1000:
     performance = "Correct"
     performance_color = "orange"
+    performance_icon = "😐"
 elif 1000 <= views < 3000:
     performance = "Bonne"
     performance_color = "green"
+    performance_icon = "🙂"
 else:
     performance = "Vrai buzz!"
     performance_color = "darkgreen"
+    performance_icon = "🔥"
 
 # Projection pour une performance idéale
 ideal_likes = (0.1 * views) if views > 0 else 100
@@ -233,13 +237,27 @@ with col2:
 
     # Indicateurs de Performance
     st.subheader("Indicateurs de Performance")
-    st.markdown(f"**Nombre total d'engagements** : {engagements}")
-    st.markdown(f"**Taux d'engagement** : {engagement_rate:.2f}%")
+    
+    # Utilisation de st.metric pour les indicateurs clés
+    col_perf1, col_perf2 = st.columns(2)
+    with col_perf1:
+        st.metric("Nombre total d'engagements", engagements)
+    with col_perf2:
+        st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+    
+    # Performance globale avec icône et couleur
     st.markdown(
-        f"<span style='color:{performance_color}; font-weight:bold;'>Performance globale : {performance}</span>",
+        f"""
+        <div style='display: flex; align-items: center;'>
+            <span style='font-size: 2em;'>{performance_icon}</span>
+            <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
+                Performance globale : {performance}
+            </span>
+        </div>
+        """,
         unsafe_allow_html=True
     )
-
+    
     # Bulle d'info pour expliquer le calcul du taux d'engagement
     st.markdown(
         """
@@ -253,32 +271,38 @@ with col2:
         unsafe_allow_html=True
     )
 
-    st.write("---")
+    st.divider()
 
     # Projection pour un Buzz
     st.subheader("Projection pour un Buzz")
     st.write("Pour atteindre un buzz, il vous faudrait environ :")
-    st.markdown(f"- **{ideal_likes:.0f} likes**")
-    st.markdown(f"- **{ideal_comments:.0f} commentaires**")
-    st.markdown(f"- **{ideal_shares:.0f} partages**")
-
-    st.write("---")
+    
+    # Utilisation de colonnes pour les projections
+    col_proj1, col_proj2, col_proj3 = st.columns(3)
+    with col_proj1:
+        st.markdown(f"**{ideal_likes:.0f} likes**")
+    with col_proj2:
+        st.markdown(f"**{ideal_comments:.0f} commentaires**")
+    with col_proj3:
+        st.markdown(f"**{ideal_shares:.0f} partages**")
+    
+    st.divider()
 
     # Conseils pour améliorer la performance
     st.subheader("Conseils pour améliorer la performance")
     if engagement_rate < 5:
-        st.write("""
-        - **Engagez davantage vos abonnés** : posez des questions ou invitez-les à donner leur avis dans les commentaires.
-        - **Répondez à tous les commentaires** : encouragez la discussion pour maintenir l'engagement.
-        - **Partagez le post à des moments stratégiques** : publiez lorsque vos abonnés sont les plus actifs.
+        st.markdown("""
+        - **Engagez davantage vos abonnés** : Posez des questions ou invitez-les à donner leur avis dans les commentaires.
+        - **Répondez à tous les commentaires** : Encouragez la discussion pour maintenir l'engagement.
+        - **Partagez le post à des moments stratégiques** : Publiez lorsque vos abonnés sont les plus actifs.
         """)
     elif engagement_rate < 10:
-        st.write("""
+        st.markdown("""
         - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
         - **Mentionnez ou taguez** des personnes pour encourager leur participation.
         """)
     else:
-        st.write("""
+        st.markdown("""
         - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
         - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
         """)
@@ -288,7 +312,7 @@ st.write("---")
 st.markdown(
     """
     <div style='text-align: center;'>
-        Développé à l'aide d'une IA sur la base du <a href='https://www.elorezo.com/r%C3%A9ussir-son-buzz-sur-linkedin-combien-faut-il-de-likes-pour-combien-de-vues' target='_blank'>blog</a> d'Antoine Jambart.
+        Développé à l'aide d'une IA sur la base du <a href='https://www.elorezo.com/r%C3%A9ussir-son-buzz-sur-linkedin-combien-faut-il-de-likes-pour-combien-de-vues' target='_blank'>blog</a> d'<a href='https://antoinejambart.com' target='_blank'>Antoine Jambart</a>.
     </div>
     """,
     unsafe_allow_html=True
