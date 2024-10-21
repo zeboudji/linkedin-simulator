@@ -14,6 +14,49 @@ Bienvenue dans votre simulateur de performance LinkedIn.
 Vous pouvez ajuster les valeurs avec les curseurs ou entrer manuellement les données pour obtenir des résultats précis et des conseils.
 """)
 
+# Initialisation des valeurs dans st.session_state si elles n'existent pas
+if 'followers' not in st.session_state:
+    st.session_state.followers = 5000
+if 'likes' not in st.session_state:
+    st.session_state.likes = 50
+if 'comments' not in st.session_state:
+    st.session_state.comments = 10
+if 'shares' not in st.session_state:
+    st.session_state.shares = 5
+if 'views' not in st.session_state:
+    st.session_state.views = 5000
+
+# Fonction pour synchroniser les widgets
+def sync_followers():
+    st.session_state.followers_slider = st.session_state.followers_input
+
+def sync_followers_slider():
+    st.session_state.followers_input = st.session_state.followers_slider
+
+def sync_likes():
+    st.session_state.likes_slider = st.session_state.likes_input
+
+def sync_likes_slider():
+    st.session_state.likes_input = st.session_state.likes_slider
+
+def sync_comments():
+    st.session_state.comments_slider = st.session_state.comments_input
+
+def sync_comments_slider():
+    st.session_state.comments_input = st.session_state.comments_slider
+
+def sync_shares():
+    st.session_state.shares_slider = st.session_state.shares_input
+
+def sync_shares_slider():
+    st.session_state.shares_input = st.session_state.shares_slider
+
+def sync_views():
+    st.session_state.views_slider = st.session_state.views_input
+
+def sync_views_slider():
+    st.session_state.views_input = st.session_state.views_slider
+
 # Mise en page en colonnes : gauche pour les curseurs, droite pour les résultats
 col1, col2 = st.columns(2)
 
@@ -21,41 +64,32 @@ col1, col2 = st.columns(2)
 with col1:
     st.write("### Ajustez les paramètres ci-dessous")
     
-    followers_manual = st.number_input("Nombre d'abonnés", min_value=0, max_value=100000, value=5000, step=500)
-    followers = st.slider("Nombre d'abonnés (Curseur)", min_value=0, max_value=100000, value=followers_manual, step=500)
+    st.number_input("Nombre d'abonnés", min_value=0, max_value=100000, value=st.session_state.followers, step=500, key='followers_input', on_change=sync_followers)
+    st.slider("Nombre d'abonnés (Curseur)", min_value=0, max_value=100000, value=st.session_state.followers, step=500, key='followers_slider', on_change=sync_followers_slider)
     
-    # Synchroniser le curseur et la saisie manuelle
-    followers = followers_manual if followers_manual != followers else followers
-    followers_manual = followers
+    st.number_input("Nombre de likes", min_value=0, max_value=1000, value=st.session_state.likes, step=10, key='likes_input', on_change=sync_likes)
+    st.slider("Nombre de likes (Curseur)", min_value=0, max_value=1000, value=st.session_state.likes, step=10, key='likes_slider', on_change=sync_likes_slider)
     
-    likes_manual = st.number_input("Nombre de likes", min_value=0, max_value=1000, value=50, step=10)
-    likes = st.slider("Nombre de likes (Curseur)", min_value=0, max_value=1000, value=likes_manual, step=10)
+    st.number_input("Nombre de commentaires", min_value=0, max_value=500, value=st.session_state.comments, step=5, key='comments_input', on_change=sync_comments)
+    st.slider("Nombre de commentaires (Curseur)", min_value=0, max_value=500, value=st.session_state.comments, step=5, key='comments_slider', on_change=sync_comments_slider)
     
-    likes = likes_manual if likes_manual != likes else likes
-    likes_manual = likes
+    st.number_input("Nombre de partages", min_value=0, max_value=200, value=st.session_state.shares, step=5, key='shares_input', on_change=sync_shares)
+    st.slider("Nombre de partages (Curseur)", min_value=0, max_value=200, value=st.session_state.shares, step=5, key='shares_slider', on_change=sync_shares_slider)
     
-    comments_manual = st.number_input("Nombre de commentaires", min_value=0, max_value=500, value=10, step=5)
-    comments = st.slider("Nombre de commentaires (Curseur)", min_value=0, max_value=500, value=comments_manual, step=5)
-    
-    comments = comments_manual if comments_manual != comments else comments
-    comments_manual = comments
-    
-    shares_manual = st.number_input("Nombre de partages", min_value=0, max_value=200, value=5, step=5)
-    shares = st.slider("Nombre de partages (Curseur)", min_value=0, max_value=200, value=shares_manual, step=5)
-    
-    shares = shares_manual if shares_manual != shares else shares
-    shares_manual = shares
-    
-    views_manual = st.number_input("Nombre de vues générées", min_value=0, max_value=100000, value=5000, step=500)
-    views = st.slider("Nombre de vues générées (Curseur)", min_value=0, max_value=100000, value=views_manual, step=500)
-    
-    views = views_manual if views_manual != views else views
-    views_manual = views
+    st.number_input("Nombre de vues générées", min_value=0, max_value=100000, value=st.session_state.views, step=500, key='views_input', on_change=sync_views)
+    st.slider("Nombre de vues générées (Curseur)", min_value=0, max_value=100000, value=st.session_state.views, step=500, key='views_slider', on_change=sync_views_slider)
     
     hours_since_posted = st.slider("Temps écoulé depuis la publication (en heures)", min_value=1, max_value=48, value=10)
 
+# Récupération des valeurs synchronisées
+followers = st.session_state.followers_input
+likes = st.session_state.likes_input
+comments = st.session_state.comments_input
+shares = st.session_state.shares_input
+views_manual = st.session_state.views_input
+
 # Calcul des engagements et du taux d'engagement
-engagements = likes_manual + comments_manual + shares_manual
+engagements = likes + comments + shares
 engagement_rate = (engagements / views_manual) * 100 if views_manual > 0 else 0
 
 # Déterminer la performance actuelle du post
@@ -115,4 +149,5 @@ else:
 # Footer
 st.write("---")
 st.write("Développé avec ❤️ par votre IA. Améliorez vos performances LinkedIn grâce à des projections intelligentes !")
+
 
