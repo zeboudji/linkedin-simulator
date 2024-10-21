@@ -2,6 +2,7 @@ from PIL import Image
 import streamlit as st
 import base64
 from io import BytesIO
+import pandas as pd  # Assurez-vous d'importer pandas si vous utilisez des graphiques
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -12,11 +13,15 @@ st.set_page_config(
 
 # --- Fonction pour encoder l'image en base64 ---
 def get_image_base64(image_path):
-    img = Image.open(image_path)
-    buffer = BytesIO()
-    img.save(buffer, format='PNG')
-    img_str = base64.b64encode(buffer.getvalue()).decode()
-    return img_str
+    try:
+        img = Image.open(image_path)
+        buffer = BytesIO()
+        img.save(buffer, format='PNG')
+        img_str = base64.b64encode(buffer.getvalue()).decode()
+        return img_str
+    except Exception as e:
+        st.error(f"Erreur lors du chargement du logo : {e}")
+        return ""
 
 # --- Chargement et encodage du logo ---
 logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
@@ -26,7 +31,7 @@ st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
         <img src='data:image/png;base64,{logo_base64}' width='100' style='margin-right: 20px;'/>
-        <h1>Simulateur de Performance LinkedIn</h1>
+        <h1 style='color: var(--textColor);'>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
     unsafe_allow_html=True
@@ -212,19 +217,19 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 # Détermination de la performance actuelle du post
 if views < 500:
     performance = "Médiocre"
-    performance_color = "red"
+    performance_color = "#FF4B4B"  # Rouge vif
     performance_icon = "😟"
 elif 500 <= views < 1000:
     performance = "Correct"
-    performance_color = "orange"
+    performance_color = "#FFA500"  # Orange
     performance_icon = "😐"
 elif 1000 <= views < 3000:
     performance = "Bonne"
-    performance_color = "green"
+    performance_color = "#32CD32"  # Vert lime
     performance_icon = "🙂"
 else:
     performance = "Vrai buzz!"
-    performance_color = "darkgreen"
+    performance_color = "#1E90FF"  # Bleu dodger
     performance_icon = "🔥"
 
 # Projection pour une performance idéale
@@ -246,6 +251,8 @@ with col2:
     with col_perf2:
         st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
     
+    st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
+
     # Performance globale avec icône et couleur
     st.markdown(
         f"""
@@ -259,6 +266,8 @@ with col2:
         unsafe_allow_html=True
     )
     
+    st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
+
     # Bulle d'info pour expliquer le calcul du taux d'engagement
     st.markdown(
         """
@@ -281,18 +290,18 @@ with col2:
     # Encadré Stylisé pour la Projection
     st.markdown(
         f"""
-        <div style='background-color: #f0f8ff; border-left: 5px solid #1da1f2; padding: 10px; border-radius: 5px;'>
-            <div style='display: flex; justify-content: space-around;'>
+        <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
+            <div style='display: flex; justify-content: space-around; align-items: center;'>
                 <div style='text-align: center;'>
-                    <span style='font-size: 1.5em;'>👍</span><br>
+                    <span style='font-size: 2em;'>👍</span><br>
                     <strong>{ideal_likes:.0f} Likes</strong>
                 </div>
                 <div style='text-align: center;'>
-                    <span style='font-size: 1.5em;'>💬</span><br>
+                    <span style='font-size: 2em;'>💬</span><br>
                     <strong>{ideal_comments:.0f} Commentaires</strong>
                 </div>
                 <div style='text-align: center;'>
-                    <span style='font-size: 1.5em;'>🔗</span><br>
+                    <span style='font-size: 2em;'>🔗</span><br>
                     <strong>{ideal_shares:.0f} Partages</strong>
                 </div>
             </div>
