@@ -250,7 +250,7 @@ with col2:
         hours_since_posted == default_values['hours_since_posted']):
         st.info("En attente de vos paramètres...")
     else:
-        # Indicateurs de Performance
+        # Indicateurs de vos Performance
         st.subheader("Indicateurs de Performance")
         
         # Utilisation de st.metric pour les indicateurs clés
