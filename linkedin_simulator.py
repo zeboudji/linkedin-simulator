@@ -24,7 +24,7 @@ if 'comments' not in st.session_state:
 if 'shares' not in st.session_state:
     st.session_state.shares = 0
 if 'views' not in st.session_state:
-    st.session_state.views = 1000
+    st.session_state.views = 0
 
 # Fonction pour synchroniser les widgets
 def sync_followers():
