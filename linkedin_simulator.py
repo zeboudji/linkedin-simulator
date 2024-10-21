@@ -30,7 +30,7 @@ logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemi
 st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
-        <img src='data:image/png;base64,{logo_base64}' width='30' style='margin-right: 20px;'/>
+        <img src='data:image/png;base64,{logo_base64}' width='100' style='margin-right: 20px;'/>
         <h1 style='color: var(--textColor);'>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
@@ -241,95 +241,104 @@ ideal_shares = (0.02 * views) if views > 0 else 20
 with col2:
     st.header("Résultats")
 
-    # Indicateurs de Performance
-    st.subheader("Indicateurs de Performance")
-    
-    # Utilisation de st.metric pour les indicateurs clés
-    col_perf1, col_perf2 = st.columns(2)
-    with col_perf1:
-        st.metric("Nombre total d'engagements", engagements)
-    with col_perf2:
-        st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
-    
-    st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
+    # Vérifier si les paramètres sont à leurs valeurs par défaut (en attente)
+    if (followers == default_values['followers'] and
+        likes == default_values['likes'] and
+        comments == default_values['comments'] and
+        shares == default_values['shares'] and
+        views == default_values['views'] and
+        hours_since_posted == default_values['hours_since_posted']):
+        st.info("En attente de vos paramètres...")
+    else:
+        # Indicateurs de Performance
+        st.subheader("Indicateurs de Performance")
+        
+        # Utilisation de st.metric pour les indicateurs clés
+        col_perf1, col_perf2 = st.columns(2)
+        with col_perf1:
+            st.metric("Nombre total d'engagements", engagements)
+        with col_perf2:
+            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+        
+        st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
-    # Performance globale avec icône et couleur
-    st.markdown(
-        f"""
-        <div style='display: flex; align-items: center;'>
-            <span style='font-size: 2em;'>{performance_icon}</span>
-            <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
-                Performance globale : {performance}
-            </span>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
+        # Performance globale avec icône et couleur
+        st.markdown(
+            f"""
+            <div style='display: flex; align-items: center;'>
+                <span style='font-size: 2em;'>{performance_icon}</span>
+                <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
+                    Performance globale : {performance}
+                </span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
 
-    # Bulle d'info pour expliquer le calcul du taux d'engagement
-    st.markdown(
-        """
-        <details>
-        <summary><strong>Comment est calculé le taux d'engagement ?</strong></summary>
-        <p>Le taux d'engagement est calculé en divisant le nombre total d'engagements (likes, commentaires, partages) par le nombre total de vues, puis en multipliant par 100 pour obtenir un pourcentage.</p>
-        <p><strong>Formule :</strong><br>
-        Taux d'engagement (%) = (Engagements / Vues) * 100</p>
-        </details>
-        """,
-        unsafe_allow_html=True
-    )
+        # Bulle d'info pour expliquer le calcul du taux d'engagement
+        st.markdown(
+            """
+            <details>
+            <summary><strong>Comment est calculé le taux d'engagement ?</strong></summary>
+            <p>Le taux d'engagement est calculé en divisant le nombre total d'engagements (likes, commentaires, partages) par le nombre total de vues, puis en multipliant par 100 pour obtenir un pourcentage.</p>
+            <p><strong>Formule :</strong><br>
+            Taux d'engagement (%) = (Engagements / Vues) * 100</p>
+            </details>
+            """,
+            unsafe_allow_html=True
+        )
 
-    st.divider()
+        st.divider()
 
-    # Projection pour un Buzz
-    st.subheader("Projection pour un Buzz")
-    st.write("Pour atteindre un buzz, il vous faudrait environ :")
-    
-    # Encadré Stylisé pour la Projection
-    st.markdown(
-        f"""
-        <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
-            <div style='display: flex; justify-content: space-around; align-items: center;'>
-                <div style='text-align: center;'>
-                    <span style='font-size: 2em;'>👍</span><br>
-                    <strong>{ideal_likes:.0f} Likes</strong>
-                </div>
-                <div style='text-align: center;'>
-                    <span style='font-size: 2em;'>💬</span><br>
-                    <strong>{ideal_comments:.0f} Commentaires</strong>
-                </div>
-                <div style='text-align: center;'>
-                    <span style='font-size: 2em;'>🔗</span><br>
-                    <strong>{ideal_shares:.0f} Partages</strong>
+        # Projection pour un Buzz
+        st.subheader("Projection pour un Buzz")
+        st.write("Pour atteindre un buzz, il vous faudrait environ :")
+        
+        # Encadré Stylisé pour la Projection
+        st.markdown(
+            f"""
+            <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
+                <div style='display: flex; justify-content: space-around; align-items: center;'>
+                    <div style='text-align: center;'>
+                        <span style='font-size: 2em;'>👍</span><br>
+                        <strong>{ideal_likes:.0f} Likes</strong>
+                    </div>
+                    <div style='text-align: center;'>
+                        <span style='font-size: 2em;'>💬</span><br>
+                        <strong>{ideal_comments:.0f} Commentaires</strong>
+                    </div>
+                    <div style='text-align: center;'>
+                        <span style='font-size: 2em;'>🔗</span><br>
+                        <strong>{ideal_shares:.0f} Partages</strong>
+                    </div>
                 </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    st.divider()
+            """,
+            unsafe_allow_html=True
+        )
+        
+        st.divider()
 
-    # Conseils pour améliorer la performance
-    st.subheader("Conseils pour améliorer la performance")
-    if engagement_rate < 5:
-        st.markdown("""
-        - **Engagez davantage vos abonnés** : Posez des questions ou invitez-les à donner leur avis dans les commentaires.
-        - **Répondez à tous les commentaires** : Encouragez la discussion pour maintenir l'engagement.
-        - **Partagez le post à des moments stratégiques** : Publiez lorsque vos abonnés sont les plus actifs.
-        """)
-    elif engagement_rate < 10:
-        st.markdown("""
-        - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
-        - **Mentionnez ou taguez** des personnes pour encourager leur participation.
-        """)
-    else:
-        st.markdown("""
-        - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
-        - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
-        """)
+        # Conseils pour améliorer la performance
+        st.subheader("Conseils pour améliorer la performance")
+        if engagement_rate < 5:
+            st.markdown("""
+            - **Engagez davantage vos abonnés** : Posez des questions ou invitez-les à donner leur avis dans les commentaires.
+            - **Répondez à tous les commentaires** : Encouragez la discussion pour maintenir l'engagement.
+            - **Partagez le post à des moments stratégiques** : Publiez lorsque vos abonnés sont les plus actifs.
+            """)
+        elif engagement_rate < 10:
+            st.markdown("""
+            - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
+            - **Mentionnez ou taguez** des personnes pour encourager leur participation.
+            """)
+        else:
+            st.markdown("""
+            - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
+            - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
+            """)
 
 # --- Footer ---
 st.write("---")
