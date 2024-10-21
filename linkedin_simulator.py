@@ -60,142 +60,141 @@ def sync_slider_with_input(slider_key, input_key):
     st.session_state[input_key] = st.session_state[slider_key]
 
 # --- Mise en page en colonnes ---
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 1])
 
 # --- Saisie des paramètres dans la première colonne ---
 with col1:
     st.header("Paramètres")
 
-    with st.expander("Ajuster les paramètres du post"):
-        # Nombre d'abonnés
-        st.subheader("Nombre d'abonnés")
-        st.number_input(
-            "Entrez le nombre d'abonnés",
-            min_value=0,
-            max_value=100_000,
-            value=st.session_state.followers,
-            step=500,
-            key='followers_input',
-            on_change=sync_input_with_slider,
-            args=('followers_input', 'followers_slider')
-        )
-        st.slider(
-            "Nombre d'abonnés",
-            min_value=0,
-            max_value=100_000,
-            value=st.session_state.followers,
-            step=500,
-            key='followers_slider',
-            on_change=sync_slider_with_input,
-            args=('followers_slider', 'followers_input')
-        )
-        st.write("---")
+    # Nombre d'abonnés
+    st.subheader("Nombre d'abonnés")
+    st.number_input(
+        "Entrez le nombre d'abonnés",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.followers,
+        step=500,
+        key='followers_input',
+        on_change=sync_input_with_slider,
+        args=('followers_input', 'followers_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.followers,
+        step=500,
+        key='followers_slider',
+        on_change=sync_slider_with_input,
+        args=('followers_slider', 'followers_input')
+    )
+    st.write("---")
 
-        # Nombre de likes
-        st.subheader("Nombre de likes")
-        st.number_input(
-            "Entrez le nombre de likes",
-            min_value=0,
-            max_value=1_000,
-            value=st.session_state.likes,
-            step=10,
-            key='likes_input',
-            on_change=sync_input_with_slider,
-            args=('likes_input', 'likes_slider')
-        )
-        st.slider(
-            "Nombre de likes",
-            min_value=0,
-            max_value=1_000,
-            value=st.session_state.likes,
-            step=10,
-            key='likes_slider',
-            on_change=sync_slider_with_input,
-            args=('likes_slider', 'likes_input')
-        )
-        st.write("---")
+    # Nombre de likes
+    st.subheader("Nombre de likes")
+    st.number_input(
+        "Entrez le nombre de likes",
+        min_value=0,
+        max_value=1_000,
+        value=st.session_state.likes,
+        step=10,
+        key='likes_input',
+        on_change=sync_input_with_slider,
+        args=('likes_input', 'likes_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=1_000,
+        value=st.session_state.likes,
+        step=10,
+        key='likes_slider',
+        on_change=sync_slider_with_input,
+        args=('likes_slider', 'likes_input')
+    )
+    st.write("---")
 
-        # Nombre de commentaires
-        st.subheader("Nombre de commentaires")
-        st.number_input(
-            "Entrez le nombre de commentaires",
-            min_value=0,
-            max_value=500,
-            value=st.session_state.comments,
-            step=5,
-            key='comments_input',
-            on_change=sync_input_with_slider,
-            args=('comments_input', 'comments_slider')
-        )
-        st.slider(
-            "Nombre de commentaires",
-            min_value=0,
-            max_value=500,
-            value=st.session_state.comments,
-            step=5,
-            key='comments_slider',
-            on_change=sync_slider_with_input,
-            args=('comments_slider', 'comments_input')
-        )
-        st.write("---")
+    # Nombre de commentaires
+    st.subheader("Nombre de commentaires")
+    st.number_input(
+        "Entrez le nombre de commentaires",
+        min_value=0,
+        max_value=500,
+        value=st.session_state.comments,
+        step=5,
+        key='comments_input',
+        on_change=sync_input_with_slider,
+        args=('comments_input', 'comments_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=500,
+        value=st.session_state.comments,
+        step=5,
+        key='comments_slider',
+        on_change=sync_slider_with_input,
+        args=('comments_slider', 'comments_input')
+    )
+    st.write("---")
 
-        # Nombre de partages
-        st.subheader("Nombre de partages")
-        st.number_input(
-            "Entrez le nombre de partages",
-            min_value=0,
-            max_value=200,
-            value=st.session_state.shares,
-            step=5,
-            key='shares_input',
-            on_change=sync_input_with_slider,
-            args=('shares_input', 'shares_slider')
-        )
-        st.slider(
-            "Nombre de partages",
-            min_value=0,
-            max_value=200,
-            value=st.session_state.shares,
-            step=5,
-            key='shares_slider',
-            on_change=sync_slider_with_input,
-            args=('shares_slider', 'shares_input')
-        )
-        st.write("---")
+    # Nombre de partages
+    st.subheader("Nombre de partages")
+    st.number_input(
+        "Entrez le nombre de partages",
+        min_value=0,
+        max_value=200,
+        value=st.session_state.shares,
+        step=5,
+        key='shares_input',
+        on_change=sync_input_with_slider,
+        args=('shares_input', 'shares_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=200,
+        value=st.session_state.shares,
+        step=5,
+        key='shares_slider',
+        on_change=sync_slider_with_input,
+        args=('shares_slider', 'shares_input')
+    )
+    st.write("---")
 
-        # Nombre de vues générées
-        st.subheader("Nombre de vues générées")
-        st.number_input(
-            "Entrez le nombre de vues",
-            min_value=0,
-            max_value=100_000,
-            value=st.session_state.views,
-            step=500,
-            key='views_input',
-            on_change=sync_input_with_slider,
-            args=('views_input', 'views_slider')
-        )
-        st.slider(
-            "Nombre de vues générées",
-            min_value=0,
-            max_value=100_000,
-            value=st.session_state.views,
-            step=500,
-            key='views_slider',
-            on_change=sync_slider_with_input,
-            args=('views_slider', 'views_input')
-        )
-        st.write("---")
+    # Nombre de vues générées
+    st.subheader("Nombre de vues générées")
+    st.number_input(
+        "Entrez le nombre de vues",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.views,
+        step=500,
+        key='views_input',
+        on_change=sync_input_with_slider,
+        args=('views_input', 'views_slider')
+    )
+    st.slider(
+        "",
+        min_value=0,
+        max_value=100_000,
+        value=st.session_state.views,
+        step=500,
+        key='views_slider',
+        on_change=sync_slider_with_input,
+        args=('views_slider', 'views_input')
+    )
+    st.write("---")
 
-        # Temps écoulé depuis la publication
-        st.subheader("Temps écoulé depuis la publication (heures)")
-        st.slider(
-            "Temps écoulé (heures)",
-            min_value=1,
-            max_value=48,
-            value=st.session_state.hours_since_posted,
-            key='hours_since_posted'
-        )
+    # Temps écoulé depuis la publication
+    st.subheader("Temps écoulé depuis la publication (heures)")
+    st.slider(
+        "Temps écoulé (heures)",
+        min_value=1,
+        max_value=48,
+        value=st.session_state.hours_since_posted,
+        key='hours_since_posted'
+    )
 
 # --- Récupération des valeurs synchronisées ---
 followers = st.session_state.followers_input
@@ -232,56 +231,57 @@ ideal_shares = (0.02 * views) if views > 0 else 20
 with col2:
     st.header("Résultats")
 
-    with st.expander("Voir les indicateurs de performance"):
-        st.subheader("Indicateurs de Performance")
-        st.markdown(f"**Nombre total d'engagements** : {engagements}")
-        st.markdown(f"**Taux d'engagement** : {engagement_rate:.2f}%")
-        st.markdown(
-            f"<span style='color:{performance_color}; font-weight:bold;'>Performance globale : {performance}</span>",
-            unsafe_allow_html=True
-        )
+    # Indicateurs de Performance
+    st.subheader("Indicateurs de Performance")
+    st.markdown(f"**Nombre total d'engagements** : {engagements}")
+    st.markdown(f"**Taux d'engagement** : {engagement_rate:.2f}%")
+    st.markdown(
+        f"<span style='color:{performance_color}; font-weight:bold;'>Performance globale : {performance}</span>",
+        unsafe_allow_html=True
+    )
 
-        # Bulle d'info pour expliquer le calcul du taux d'engagement
-        st.info(
-            """
-            **Comment est calculé le taux d'engagement ?**
-
-            Le taux d'engagement est calculé en divisant le nombre total d'engagements (likes, commentaires, partages) par le nombre total de vues, puis en multipliant par 100 pour obtenir un pourcentage.
-
-            \n**Formule :**  
-            Taux d'engagement (%) = (Engagements / Vues) * 100
-            """
-        )
-
-    st.write("---")
-
-    with st.expander("Projection pour un Buzz"):
-        st.subheader("Projection pour un Buzz")
-        st.write("Pour atteindre un buzz, il vous faudrait environ :")
-        st.markdown(f"- **{ideal_likes:.0f} likes**")
-        st.markdown(f"- **{ideal_comments:.0f} commentaires**")
-        st.markdown(f"- **{ideal_shares:.0f} partages**")
+    # Bulle d'info pour expliquer le calcul du taux d'engagement
+    st.markdown(
+        """
+        <details>
+        <summary><strong>Comment est calculé le taux d'engagement ?</strong></summary>
+        <p>Le taux d'engagement est calculé en divisant le nombre total d'engagements (likes, commentaires, partages) par le nombre total de vues, puis en multipliant par 100 pour obtenir un pourcentage.</p>
+        <p><strong>Formule :</strong><br>
+        Taux d'engagement (%) = (Engagements / Vues) * 100</p>
+        </details>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.write("---")
 
-    with st.expander("Conseils pour améliorer la performance"):
-        st.subheader("Conseils personnalisés")
-        if engagement_rate < 5:
-            st.write("""
-            - **Engagez davantage vos abonnés** : posez des questions ou invitez-les à donner leur avis dans les commentaires.
-            - **Répondez à tous les commentaires** : encouragez la discussion pour maintenir l'engagement.
-            - **Partagez le post à des moments stratégiques** : publiez lorsque vos abonnés sont les plus actifs.
-            """)
-        elif engagement_rate < 10:
-            st.write("""
-            - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
-            - **Mentionnez ou taguez** des personnes pour encourager leur participation.
-            """)
-        else:
-            st.write("""
-            - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
-            - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
-            """)
+    # Projection pour un Buzz
+    st.subheader("Projection pour un Buzz")
+    st.write("Pour atteindre un buzz, il vous faudrait environ :")
+    st.markdown(f"- **{ideal_likes:.0f} likes**")
+    st.markdown(f"- **{ideal_comments:.0f} commentaires**")
+    st.markdown(f"- **{ideal_shares:.0f} partages**")
+
+    st.write("---")
+
+    # Conseils pour améliorer la performance
+    st.subheader("Conseils pour améliorer la performance")
+    if engagement_rate < 5:
+        st.write("""
+        - **Engagez davantage vos abonnés** : posez des questions ou invitez-les à donner leur avis dans les commentaires.
+        - **Répondez à tous les commentaires** : encouragez la discussion pour maintenir l'engagement.
+        - **Partagez le post à des moments stratégiques** : publiez lorsque vos abonnés sont les plus actifs.
+        """)
+    elif engagement_rate < 10:
+        st.write("""
+        - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
+        - **Mentionnez ou taguez** des personnes pour encourager leur participation.
+        """)
+    else:
+        st.write("""
+        - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
+        - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
+        """)
 
 # --- Footer ---
 st.write("---")
