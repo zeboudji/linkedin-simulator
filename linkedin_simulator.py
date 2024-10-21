@@ -2,7 +2,7 @@ from PIL import Image
 import streamlit as st
 
 # Ajout du logo
-logo = Image.open('logo.png')  # Remplace par 'images/logo.png' si tu as mis le logo dans un sous-dossier
+logo = Image.open('linkedin_logo.png')  # Remplace par 'images/logo.png' si tu as mis le logo dans un sous-dossier
 st.image(logo, width=150)
 
 # Titre de l'application
