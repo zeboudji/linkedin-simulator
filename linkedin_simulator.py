@@ -66,7 +66,7 @@ col1, col2 = st.columns([1, 1])
 with col1:
     st.header("Paramètres")
 
-    # Nombre d'abonnés
+    # Quel est votre nombre d'abonnés
     st.subheader("Nombre d'abonnés")
     st.number_input(
         "Entrez le nombre d'abonnés",
@@ -90,7 +90,7 @@ with col1:
     )
     st.write("---")
 
-    # Nombre de likes
+    # Quel est le nombre de likes sur votre post ?
     st.subheader("Nombre de likes")
     st.number_input(
         "Entrez le nombre de likes",
@@ -114,7 +114,7 @@ with col1:
     )
     st.write("---")
 
-    # Nombre de commentaires
+    # Quel est le nombre de commentaires ?
     st.subheader("Nombre de commentaires")
     st.number_input(
         "Entrez le nombre de commentaires",
@@ -138,7 +138,7 @@ with col1:
     )
     st.write("---")
 
-    # Nombre de partages
+    # Quel est le nombre de partages ?
     st.subheader("Nombre de partages")
     st.number_input(
         "Entrez le nombre de partages",
@@ -162,7 +162,7 @@ with col1:
     )
     st.write("---")
 
-    # Nombre de vues générées
+    # Quel est le nombre de vues (impressions) générées ?
     st.subheader("Nombre de vues générées")
     st.number_input(
         "Entrez le nombre de vues",
@@ -191,7 +191,7 @@ with col1:
     st.slider(
         "Temps écoulé (heures)",
         min_value=1,
-        max_value=48,
+        max_value=72,
         value=st.session_state.hours_since_posted,
         key='hours_since_posted'
     )
