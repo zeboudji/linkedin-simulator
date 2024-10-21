@@ -25,7 +25,7 @@ logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemi
 st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
-        <img src='data:image/png;base64,{logo_base64}' width='50' style='margin-right: 20px;'/>
+        <img src='data:image/png;base64,{logo_base64}' width='100' style='margin-right: 20px;'/>
         <h1>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
@@ -89,7 +89,8 @@ with col1:
         args=('followers_slider', 'followers_input')
     )
     st.divider()
-   # Nombre de vues générées
+
+    # Nombre de vues générées
     st.subheader("Nombre de vues générées")
     st.number_input(
         "Entrez le nombre de vues",
@@ -104,7 +105,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,
+        max_value=50_000,  # Correction de la limite pour correspondre au number_input
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -122,6 +123,8 @@ with col1:
         value=st.session_state.hours_since_posted,
         key='hours_since_posted'
     )
+    st.divider()
+
     # Nombre de likes
     st.subheader("Nombre de likes")
     st.number_input(
@@ -137,7 +140,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=1_000,
+        max_value=500,  # Correction de la limite pour correspondre au number_input
         value=st.session_state.likes,
         step=10,
         key='likes_slider',
@@ -193,8 +196,6 @@ with col1:
         args=('shares_slider', 'shares_input')
     )
     st.divider()
-
- 
 
 # --- Récupération des valeurs synchronisées ---
 followers = st.session_state.followers_input
@@ -277,14 +278,28 @@ with col2:
     st.subheader("Projection pour un Buzz")
     st.write("Pour atteindre un buzz, il vous faudrait environ :")
     
-    # Utilisation de colonnes pour les projections
-    col_proj1, col_proj2, col_proj3 = st.columns(3)
-    with col_proj1:
-        st.markdown(f"**{ideal_likes:.0f} likes**")
-    with col_proj2:
-        st.markdown(f"**{ideal_comments:.0f} commentaires**")
-    with col_proj3:
-        st.markdown(f"**{ideal_shares:.0f} partages**")
+    # Encadré Stylisé pour la Projection
+    st.markdown(
+        f"""
+        <div style='background-color: #f0f8ff; border-left: 5px solid #1da1f2; padding: 10px; border-radius: 5px;'>
+            <div style='display: flex; justify-content: space-around;'>
+                <div style='text-align: center;'>
+                    <span style='font-size: 1.5em;'>👍</span><br>
+                    <strong>{ideal_likes:.0f} Likes</strong>
+                </div>
+                <div style='text-align: center;'>
+                    <span style='font-size: 1.5em;'>💬</span><br>
+                    <strong>{ideal_comments:.0f} Commentaires</strong>
+                </div>
+                <div style='text-align: center;'>
+                    <span style='font-size: 1.5em;'>🔗</span><br>
+                    <strong>{ideal_shares:.0f} Partages</strong>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     st.divider()
 
