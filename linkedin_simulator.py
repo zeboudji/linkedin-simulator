@@ -25,7 +25,7 @@ logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemi
 st.markdown(
     f"""
     <div style='display: flex; align-items: center;'>
-        <img src='data:image/png;base64,{logo_base64}' width='150' style='margin-right: 20px;'/>
+        <img src='data:image/png;base64,{logo_base64}' width='50' style='margin-right: 20px;'/>
         <h1>Simulateur de Performance LinkedIn</h1>
     </div>
     """,
