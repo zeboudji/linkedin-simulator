@@ -71,9 +71,9 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.followers,
-        step=500,
+        step=200,
         key='followers_input',
         on_change=sync_input_with_slider,
         args=('followers_input', 'followers_slider')
@@ -81,9 +81,9 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100_000,
+        max_value=5_000,
         value=st.session_state.followers,
-        step=500,
+        step=200,
         key='followers_slider',
         on_change=sync_slider_with_input,
         args=('followers_slider', 'followers_input')
@@ -94,9 +94,9 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=100_000,
+        max_value=5_000,
         value=st.session_state.views,
-        step=500,
+        step=200,
         key='views_input',
         on_change=sync_input_with_slider,
         args=('views_input', 'views_slider')
@@ -118,7 +118,7 @@ with col1:
     st.slider(
         "Temps écoulé (heures)",
         min_value=1,
-        max_value=48,
+        max_value=72,
         value=st.session_state.hours_since_posted,
         key='hours_since_posted'
     )
