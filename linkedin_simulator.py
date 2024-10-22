@@ -82,7 +82,7 @@ views_thresholds = [500, 1000, 3000]  # Médiocre, Correct, Bon, Vrai buzz!
 views_labels = ["😟", "👍", "😊", "🔥"]
 
 # --- Définition des seuils, labels et icônes pour la performance globale ---
-global_performance_thresholds = [35, 60, 80]  # Médiocre, Correct, Bon, Excellent
+global_performance_thresholds = [30, 60, 80]  # Médiocre, Correct, Bon, Excellent
 global_performance_labels = ["Médiocre", "Correct", "Bon", "Excellent"]
 global_performance_icons = ["😟", "😐", "🙂", "🔥"]
 
@@ -245,8 +245,8 @@ max_followers = 50_000  # Augmenté pour accommoder plus d'abonnés
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
-normalized_views = min(views, 1)
-normalized_engagements = min(engagements, 1)
+normalized_views = MAX(views, 1)
+normalized_engagements = MAX(engagements, 1)
 normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
 normalized_followers = min(followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
