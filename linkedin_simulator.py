@@ -73,13 +73,13 @@ def determine_performance(value, thresholds, labels):
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
 engagements_thresholds = [20, 50]
-engagements_labels = ["Faible 😟", "Moyen 😐", "Élevé 🙂"]
+engagements_labels = ["😟", "😐", "🙂"]  # Faible, Moyen, Élevé
 
 engagement_rate_thresholds = [2, 5, 10]
-engagement_rate_labels = ["À améliorer 😕", "Correct 👍", "Bon 😊", "Excellent 🚀"]
+engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
 
 views_thresholds = [500, 1000, 3000]
-views_labels = ["Médiocre 😟", "Correct 👍", "Bon 😊", "Vrai buzz! 🔥"]
+views_labels = ["😟", "👍", "😊", "🔥"]  # Médiocre, Correct, Bon, Vrai buzz!
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -258,11 +258,11 @@ if views < 500:
 elif 500 <= views < 1000:
     performance = "Correct 👍"
     performance_color = "#FFA500"  # Orange
-    performance_icon = "😐"
+    performance_icon = "👍"
 elif 1000 <= views < 3000:
-    performance = "Bonne 😊"
+    performance = "Bon 😊"
     performance_color = "#32CD32"  # Vert lime
-    performance_icon = "🙂"
+    performance_icon = "😊"
 else:
     performance = "Vrai buzz! 🔥"
     performance_color = "#1E90FF"  # Bleu dodger
@@ -284,16 +284,19 @@ with col2:
         # Indicateurs de Performance
         st.subheader("Indicateurs de Performance")
 
-        # Utilisation de st.metric pour les indicateurs clés avec indications de performance
+        # Utilisation de st.columns pour les indicateurs
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
-            st.metric("Nombre total d'engagements", f"{engagements} ({engagements_perf})")
+            st.metric("Nombre total d'engagements", f"{engagements}")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_perf}</div>", unsafe_allow_html=True)
         with col_perf2:
-            st.metric("Taux d'engagement", f"{engagement_rate:.2f}% ({engagement_rate_perf})")
+            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_perf}</div>", unsafe_allow_html=True)
         with col_perf3:
-            st.metric("Nombre de vues", f"{views} ({views_perf})")
+            st.metric("Nombre de vues", f"{views}")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_perf}</div>", unsafe_allow_html=True)
         with col_perf4:
-            st.metric("Seuil de buzz", ideal_views)
+            st.metric("Seuil de buzz", f"{ideal_views}")
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
