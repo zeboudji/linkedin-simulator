@@ -71,20 +71,31 @@ def determine_performance_index(value, thresholds):
             return i
     return len(thresholds)
 
-# --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
-engagements_thresholds = [5, 10, 40, 50]  # Faible, Moyen, Bon, Excellent
-engagements_labels = ["😟", "😐", "🙂", "🚀"]
-
-engagement_rate_thresholds = [1, 2, 4, 10]  # À améliorer, Correct, Bon, Excellent
-engagement_rate_labels = ["😕", "👍", "😊", "🚀"]
-
-views_thresholds = [500, 1000, 3000]  # Médiocre, Correct, Bon, Vrai buzz!
+# --- Définition des seuils et labels pour les vues ---
+views_thresholds = [500, 1000, 3000]  # Médiocre, Correct, Bon, Excellent
 views_labels = ["😟", "👍", "😊", "🔥"]
 
+# --- Définition des seuils et labels pour les réactions ---
+reactions_thresholds = [100, 200, 400, 500]  # Faible, Moyen, Bon, Excellent
+reactions_labels = ["😟", "😐", "🙂", "🚀"]
+
 # --- Définition des seuils, labels et icônes pour la performance globale ---
-global_performance_thresholds = [30, 60, 80]  # Médiocre, Correct, Bon, Excellent
+global_performance_thresholds = [500, 1000, 3000]  # Basés sur les vues
 global_performance_labels = ["Médiocre", "Correct", "Bon", "Excellent"]
-global_performance_icons = ["😟", "😐", "🙂", "🔥"]
+performance_icons_dict = {
+    "Médiocre": "😟",
+    "Correct": "👍",
+    "Bon": "😊",
+    "Excellent": "🔥"
+}
+
+# --- Couleurs associées à chaque catégorie de performance ---
+performance_colors = {
+    "Médiocre": "#FF4B4B",  # Rouge vif
+    "Correct": "#FFA500",    # Orange
+    "Bon": "#32CD32",        # Vert lime
+    "Excellent": "#1E90FF"   # Bleu dodger
+}
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -98,7 +109,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=20_000,  # Augmenté pour accommoder plus d'abonnés
+        max_value=20_000,  # Ajusté pour accommoder plus d'abonnés
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -122,7 +133,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=10_000,  # Augmenté pour accommoder plus de vues
+        max_value=10_000,  # Ajusté pour accommoder plus de vues
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -233,75 +244,46 @@ views = st.session_state.views_input
 hours_since_posted = st.session_state.hours_since_posted
 
 # --- Calculs des indicateurs ---
-engagements = likes + comments + shares
-engagement_rate = (engagements / views) * 100 if views > 0 else 0
+reactions = likes + comments + shares
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 10_000  # Augmenté pour accommoder plus de vues
-max_engagements = 2_000  # Augmenté pour accommoder plus d'engagements
-max_engagement_rate = 20  # 20%
-max_followers = 50_000  # Augmenté pour accommoder plus d'abonnés
-max_hours = 72  # Maximum du slider
+max_views = 3000  # Réduit pour augmenter la contribution des vues
+max_reactions = 1000  # Exemple
 
 # Normaliser chaque métrique
-normalized_views = MAX(views, 1)
-normalized_engagements = MAX(engagements, 1)
-normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
-normalized_followers = min(followers, 1)
-normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
+normalized_views = min(views / max_views, 1)
+normalized_reactions = min(reactions / max_reactions, 1)
 
 # --- Attribution des poids ---
-# Donner un poids important aux vues (80%)
-weight_views = 0.80
-weight_engagements = 0.15
-weight_engagement_rate = 0.03
-weight_followers = 0.01
-weight_time = 0.01
+# Donner un poids important aux vues (85%) et réactions (15%)
+weight_views = 0.85
+weight_reactions = 0.15
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
 global_score = (
     normalized_views * weight_views +
-    normalized_engagements * weight_engagements +
-    normalized_engagement_rate * weight_engagement_rate +
-    normalized_followers * weight_followers +
-    normalized_time * weight_time
+    normalized_reactions * weight_reactions
 ) * 100  # Pour obtenir un score sur 100
 
-# --- Détermination de la performance globale (retourne l'indice) ---
-def determine_performance_index(value, thresholds):
+# --- Détermination de la performance globale (basée sur les vues) ---
+def determine_performance_label(views, thresholds, labels):
     for i, threshold in enumerate(thresholds):
-        if value < threshold:
-            return i
-    return len(thresholds)
+        if views < threshold:
+            return labels[i]
+    return labels[-1]
 
-global_performance_index = determine_performance_index(global_score, global_performance_thresholds)
+global_performance = determine_performance_label(views, global_performance_thresholds, global_performance_labels)
 
-# --- Récupération du label et de l'icône ---
-if global_performance_index < len(global_performance_labels):
-    global_performance = global_performance_labels[global_performance_index]
-    performance_icon = global_performance_icons[global_performance_index]
-else:
-    # Cas où la performance dépasse tous les seuils
-    global_performance = global_performance_labels[-1]
-    performance_icon = global_performance_icons[-1]
-
-# --- Couleurs associées à chaque catégorie de performance ---
-performance_colors = {
-    "Médiocre": "#FF4B4B",  # Rouge vif
-    "Correct": "#FFA500",    # Orange
-    "Bon": "#32CD32",        # Vert lime
-    "Excellent": "#1E90FF"   # Bleu dodger
-}
+# --- Assignation de l'icône basée sur la performance ---
+performance_icon = performance_icons_dict.get(global_performance, "😐")
 
 # --- Détermination de la couleur basée sur la performance ---
 performance_color = performance_colors.get(global_performance, "#000000")  # Défaut à noir
 
 # --- Calcul des indicateurs de performance individuels ---
-engagements_perf_index = determine_performance_index(engagements, engagements_thresholds)
-engagement_rate_perf_index = determine_performance_index(engagement_rate, engagement_rate_thresholds)
-views_perf_index = determine_performance_index(views, views_thresholds)
+reactions_perf_index = determine_performance_index(reactions, reactions_thresholds)
 
 # --- Projection pour une performance idéale ---
 # Définir des projections basées sur les vues actuelles
@@ -329,16 +311,17 @@ with col2:
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
             st.metric("Nombre de vues", f"{views}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_labels[views_perf_index]}</div>", unsafe_allow_html=True)
+            performance_index = determine_performance_index(views, views_thresholds)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_labels[performance_index]}</div>", unsafe_allow_html=True)
         with col_perf2:
-            st.metric("Nombre total d'engagements", f"{engagements}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_labels[engagements_perf_index]}</div>", unsafe_allow_html=True)
+            st.metric("Nombre total de réactions", f"{reactions}")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{reactions_labels[reactions_perf_index]}</div>", unsafe_allow_html=True)
         with col_perf3:
-            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_labels[engagement_rate_perf_index]}</div>", unsafe_allow_html=True)
+            st.metric("Taux d'engagement", f"{(reactions / views * 100) if views > 0 else 0:.2f}%")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de label pour taux d'engagement
         with col_perf4:
             st.metric("Nombre d'abonnés", f"{followers}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de performance label pour abonnés
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de label pour abonnés
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
@@ -362,17 +345,21 @@ with col2:
             """
             <details>
             <summary><strong>Comment est calculée la performance globale ?</strong></summary>
-            <p>La performance globale est calculée en combinant plusieurs métriques clés :</p>
+            <p>La performance globale est calculée en combinant deux métriques clés :</p>
             <ul>
-                <li><strong>Nombre de vues</strong> : Nombre total de vues de la publication.</li>
-                <li><strong>Nombre total d'engagements</strong> : Somme des likes, commentaires et partages.</li>
-                <li><strong>Taux d'engagement</strong> : (Engagements / Vues) * 100.</li>
-                <li><strong>Nombre d'abonnés</strong> : Nombre total d'abonnés de votre profil.</li>
-                <li><strong>Temps écoulé depuis la publication</strong> : Nombre d'heures écoulées depuis la publication.</li>
+                <li><strong>Nombre de vues</strong> : 85% de la performance globale.</li>
+                <li><strong>Nombre total de réactions</strong> (likes, commentaires, partages) : 15% de la performance globale.</li>
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Vues / Max Vues) * 80 + (Engagements / Max Engagements) * 15 + (Taux d'engagement / Max Taux d'engagement) * 3 + (Abonnés / Max Abonnés) * 1 + ((Max heures - Heures écoulées) / Max heures) * 1</p>
+            Performance Globale = (Vues / Max Vues) * 85 + (Réactions / Max Réactions) * 15</p>
+            <p><strong>Catégories :</strong></p>
+            <ul>
+                <li><strong>Médiocre</strong> : < 500 vues 😟</li>
+                <li><strong>Correct</strong> : < 1000 vues 👍</li>
+                <li><strong>Bon</strong> : < 3000 vues 😊</li>
+                <li><strong>Excellent</strong> : ≥ 3000 vues 🔥</li>
+            </ul>
             </details>
             """,
             unsafe_allow_html=True
@@ -413,7 +400,7 @@ with col2:
         st.subheader("Conseils pour améliorer la performance")
         if global_score < 50:
             st.markdown("""
-            - **Augmentez vos vues et engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
+            - **Augmentez vos vues et réactions** : Encouragez vos abonnés à liker, commenter et partager vos publications.
             - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
             - **Améliorez le contenu** : Publiez du contenu plus interactif et visuellement attrayant.
             - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
@@ -421,7 +408,7 @@ with col2:
             """)
         elif global_score < 70:
             st.markdown("""
-            - **Continuez à augmenter vos vues et engagements** : Posez des questions ouvertes pour stimuler les discussions.
+            - **Continuez à augmenter vos vues et réactions** : Posez des questions ouvertes pour stimuler les discussions.
             - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
             - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
             - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
