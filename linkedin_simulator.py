@@ -233,10 +233,10 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 4_000  # Réduit pour augmenter la contribution des vues
-max_engagements = 1_000  # Exemple
-max_engagement_rate = 20  # 20%
-max_followers = 100_000  # Exemple
+max_views = 1  # Réduit pour augmenter la contribution des vues
+max_engagements = 1 # Exemple
+max_engagement_rate = 1  # 20%
+max_followers = 1 # Exemple
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
