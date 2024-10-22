@@ -233,10 +233,10 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 1  # Réduit pour augmenter la contribution des vues
-max_engagements = 1 # Exemple
-max_engagement_rate = 1  # 20%
-max_followers = 1 # Exemple
+max_views = 5_000  # Réduit pour augmenter la contribution des vues
+max_engagements = 1_000  # Exemple
+max_engagement_rate = 20  # 20%
+max_followers = 100_000  # Exemple
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
@@ -248,11 +248,11 @@ normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus l
 
 # --- Attribution des poids ---
 # Donner un poids important aux vues
-weight_views = 0.90
-weight_engagements = 0.025
-weight_engagement_rate = 0.01
-weight_followers = 0.01
-weight_time = 0.005
+weight_views = 0.50
+weight_engagements = 0.25
+weight_engagement_rate = 0.15
+weight_followers = 0.05
+weight_time = 0.05
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
@@ -358,7 +358,7 @@ with col2:
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Vues / Max Vues) * 40 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 20 + (Abonnés / Max Abonnés) * 10 + ((Max heures - Heures écoulées) / Max heures) * 5</p>
+            Performance Globale = (Vues / Max Vues) * 50 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 15 + (Abonnés / Max Abonnés) * 5 + ((Max heures - Heures écoulées) / Max heures) * 5</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -397,7 +397,7 @@ with col2:
 
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
-        if global_score < 30:
+        if global_score < 50:
             st.markdown("""
             - **Augmentez vos vues et engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
             - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
@@ -405,14 +405,14 @@ with col2:
             - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
             - **Engagez-vous avec votre communauté** : Répondez aux commentaires et participez aux discussions.
             """)
-        elif global_score < 60:
+        elif global_score < 70:
             st.markdown("""
             - **Continuez à augmenter vos vues et engagements** : Posez des questions ouvertes pour stimuler les discussions.
             - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
             - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
             - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
             """)
-        elif global_score < 80:
+        elif global_score < 85:
             st.markdown("""
             - **Maintenez vos bonnes pratiques** : Continuez à publier du contenu engageant et pertinent.
             - **Encouragez le partage** : Incitez vos abonnés à partager vos publications pour augmenter votre portée.
