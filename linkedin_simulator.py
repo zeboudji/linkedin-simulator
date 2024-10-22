@@ -93,7 +93,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -103,7 +103,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -236,7 +236,7 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 max_views = 5_000  # Réduit pour augmenter la contribution des vues
 max_engagements = 1_000  # Exemple
 max_engagement_rate = 20  # 20%
-max_followers = 100_000  # Exemple
+max_followers = 10_000  # Exemple
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
@@ -248,11 +248,11 @@ normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus l
 
 # --- Attribution des poids ---
 # Donner un poids important aux vues
-weight_views = 0.50
-weight_engagements = 0.25
-weight_engagement_rate = 0.15
-weight_followers = 0.05
-weight_time = 0.05
+weight_views = 0.95
+weight_engagements = 0.025
+weight_engagement_rate = 0.01
+weight_followers = 0.01
+weight_time = 0.005
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
