@@ -75,7 +75,7 @@ def determine_performance(value, thresholds, labels):
 engagements_thresholds = [5, 10, 40, 50]  # Ajusté pour plus de granularité
 engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Bon, Excellent
 
-engagement_rate_thresholds = [1, 2,4?10]
+engagement_rate_thresholds = [1, 2,4,10]
 engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
 
 views_thresholds = [500, 1000, 3000]
