@@ -64,6 +64,23 @@ def sync_input_with_slider(input_key, slider_key):
 def sync_slider_with_input(slider_key, input_key):
     st.session_state[input_key] = st.session_state[slider_key]
 
+# --- Fonction pour déterminer la performance ---
+def determine_performance(value, thresholds, labels):
+    for threshold, label in zip(thresholds, labels):
+        if value < threshold:
+            return label
+    return labels[-1]
+
+# --- Définition des seuils et labels pour chaque métrique ---
+engagements_thresholds = [20, 50]
+engagements_labels = ["Faible", "Moyen", "Élevé"]
+
+engagement_rate_thresholds = [2, 5, 10]
+engagement_rate_labels = ["À améliorer", "Correct", "Bon", "Excellent"]
+
+views_thresholds = [500, 1000, 3000]
+views_labels = ["Médiocre", "Correct", "Bon", "Vrai buzz!"]
+
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
 
@@ -76,7 +93,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=10_000,
+        max_value=100_000,
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -86,7 +103,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,
+        max_value=100_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -100,7 +117,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=10_000,
+        max_value=100_000,
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -110,7 +127,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,  # Correction de la limite pour correspondre au number_input
+        max_value=100_000,  # Ajusté pour une plus grande flexibilité
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -135,7 +152,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de likes",
         min_value=0,
-        max_value=200,
+        max_value=2000,
         value=st.session_state.likes,
         step=1,
         key='likes_input',
@@ -145,7 +162,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=200,  # Correction de la limite pour correspondre au number_input
+        max_value=2000,  # Ajusté pour une plus grande flexibilité
         value=st.session_state.likes,
         step=1,
         key='likes_slider',
@@ -159,7 +176,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de commentaires",
         min_value=0,
-        max_value=100,
+        max_value=1000,
         value=st.session_state.comments,
         step=1,
         key='comments_input',
@@ -169,7 +186,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100,
+        max_value=1000,
         value=st.session_state.comments,
         step=1,
         key='comments_slider',
@@ -183,7 +200,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de partages",
         min_value=0,
-        max_value=100,
+        max_value=500,
         value=st.session_state.shares,
         step=1,
         key='shares_input',
@@ -193,7 +210,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100,
+        max_value=500,
         value=st.session_state.shares,
         step=1,
         key='shares_slider',
@@ -214,7 +231,26 @@ hours_since_posted = st.session_state.hours_since_posted
 engagements = likes + comments + shares
 engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
-# Détermination de la performance actuelle du post
+# --- Calcul du seuil de buzz dynamique ---
+# Facteur de proportionnalité (par exemple, 0.6 pour obtenir 3000 vues pour 5000 abonnés)
+proportion_factor = 0.6
+ideal_views = int(followers * proportion_factor)
+
+# Assurer un seuil minimum de 3000 vues
+if ideal_views < 3000:
+    ideal_views = 3000
+
+# --- Calcul des indicateurs de performance ---
+engagements_perf = determine_performance(engagements, engagements_thresholds, engagements_labels)
+engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_thresholds, engagement_rate_labels)
+views_perf = determine_performance(views, views_thresholds, views_labels)
+
+# --- Projection pour une performance idéale ---
+ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
+ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
+ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
+
+# --- Détermination de la performance actuelle du post ---
 if views < 500:
     performance = "Médiocre"
     performance_color = "#FF4B4B"  # Rouge vif
@@ -232,17 +268,11 @@ else:
     performance_color = "#1E90FF"  # Bleu dodger
     performance_icon = "🔥"
 
-# Projection pour une performance idéale
-ideal_views = 3000  # Seuil pour "Vrai buzz!"
-ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
-ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
-ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
-
 # --- Affichage des résultats dans la deuxième colonne ---
 with col2:
     st.header("Résultats")
 
-    # Vérifier si les paramètres sont à leurs valeurs par défaut (en attente)
+    # Vérifier si les paramètres sont à leurs valeurs par défaut
     if (followers == default_values['followers'] and
         likes == default_values['likes'] and
         comments == default_values['comments'] and
@@ -253,15 +283,15 @@ with col2:
     else:
         # Indicateurs de Performance
         st.subheader("Indicateurs de Performance")
-        
-        # Utilisation de st.metric pour les indicateurs clés
+
+        # Utilisation de st.metric pour les indicateurs clés avec indications de performance
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
-            st.metric("Nombre total d'engagements", engagements)
+            st.metric("Nombre total d'engagements", f"{engagements} ({engagements_perf})")
         with col_perf2:
-            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+            st.metric("Taux d'engagement", f"{engagement_rate:.2f}% ({engagement_rate_perf})")
         with col_perf3:
-            st.metric("Nombre de vues", views)
+            st.metric("Nombre de vues", f"{views} ({views_perf})")
         with col_perf4:
             st.metric("Seuil de buzz", ideal_views)
 
@@ -279,7 +309,7 @@ with col2:
             """,
             unsafe_allow_html=True
         )
-        
+
         st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
 
         # Bulle d'info pour expliquer le calcul du taux d'engagement
@@ -300,7 +330,7 @@ with col2:
         # Projection pour un Buzz
         st.subheader("Projection pour un Buzz")
         st.write("Pour atteindre un buzz, il vous faudrait environ :")
-        
+
         # Encadré Stylisé pour la Projection
         st.markdown(
             f"""
@@ -327,7 +357,7 @@ with col2:
             """,
             unsafe_allow_html=True
         )
-        
+
         st.divider()
 
         # Conseils pour améliorer la performance
@@ -340,6 +370,9 @@ with col2:
             - **Meilleurs moments pour publier** :
                 - **Jours** : Mardi et jeudi.
                 - **Heures** : Entre 10h et 11h.
+            - **Stratégies supplémentaires** :
+                - **Type de Contenu** : Publiez plus de contenus visuels ou interactifs.
+                - **Utilisation des Hashtags** : Utilisez des hashtags pertinents et populaires.
             """)
         elif engagement_rate < 10:
             st.markdown("""
@@ -348,6 +381,9 @@ with col2:
             - **Optimisez vos horaires de publication** :
                 - **Jours** : Mardi, mercredi et jeudi.
                 - **Heures** : Entre 9h et 12h.
+            - **Stratégies supplémentaires** :
+                - **Type de Contenu** : Variez les formats (vidéos, infographies).
+                - **Utilisation des Hashtags** : Intégrez des hashtags de niche pour toucher une audience spécifique.
             """)
         else:
             st.markdown("""
@@ -356,6 +392,9 @@ with col2:
             - **Maximisez l'impact de vos publications** :
                 - **Jours** : Mardi et jeudi.
                 - **Heures** : Entre 8h et 10h ou entre 12h et 14h.
+            - **Stratégies supplémentaires** :
+                - **Type de Contenu** : Publiez des contenus exclusifs ou en avant-première.
+                - **Utilisation des Hashtags** : Créez et promouvez un hashtag de marque unique.
             """)
 
 # --- Footer ---
