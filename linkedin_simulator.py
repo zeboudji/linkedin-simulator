@@ -3,7 +3,6 @@ import streamlit as st
 import base64
 from io import BytesIO
 import pandas as pd
-import requests
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -24,44 +23,8 @@ def get_image_base64(image_path):
         st.error(f"Erreur lors du chargement du logo : {e}")
         return ""
 
-# --- Fonction pour gérer le compteur de visiteurs avec CountAPI ---
-def increment_counter(namespace, key):
-    url = f"https://api.countapi.xyz/hit/{namespace}/{key}"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            return data['value']
-        else:
-            st.error(f"Erreur {response.status_code} lors de l'incrémentation du compteur de visiteurs.")
-            st.error(f"Réponse de l'API : {response.text}")
-            return None
-    except Exception as e:
-        st.error(f"Erreur lors de la connexion à CountAPI : {e}")
-        return None
-
-def get_counter(namespace, key):
-    url = f"https://api.countapi.xyz/get/{namespace}/{key}"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            return data.get('value', 0)
-        else:
-            st.error(f"Erreur {response.status_code} lors de la récupération du compteur de visiteurs.")
-            st.error(f"Réponse de l'API : {response.text}")
-            return 0
-    except Exception as e:
-        st.error(f"Erreur lors de la connexion à CountAPI : {e}")
-        return 0
-
 # --- Chargement et encodage du logo ---
 logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
-
-# --- Incrémentation du compteur ---
-namespace = "linkedin_simulator_unique123"  # Remplacez par votre propre namespace unique
-key_counter = "visitors_unique123"  # Remplacez par votre propre clé unique
-visitor_count = increment_counter(namespace, key_counter)
 
 # --- Affichage du logo et du titre ---
 st.markdown(
@@ -73,17 +36,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# --- Affichage du compteur de visiteurs ---
-if visitor_count is not None:
-    st.markdown(
-        f"""
-        <div style='text-align: center; margin-bottom: 20px;'>
-            <h4>🔍 Nombre de visiteurs : {visitor_count}</h4>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 # --- Description de l'application ---
 st.markdown("""
@@ -101,9 +53,9 @@ default_values = {
     'hours_since_posted': 10
 }
 
-for key_state, value in default_values.items():
-    if key_state not in st.session_state:
-        st.session_state[key_state] = value
+for key, value in default_values.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
 
 # --- Fonctions de synchronisation des widgets ---
 def sync_input_with_slider(input_key, slider_key):
