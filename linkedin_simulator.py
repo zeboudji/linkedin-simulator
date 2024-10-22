@@ -292,6 +292,11 @@ performance_color = performance_colors.get(global_performance, "#FFFFFF")
 # --- Détermination de l'icône basée sur la performance ---
 performance_icon = global_performance
 
+# --- Calcul des indicateurs de performance individuels ---
+engagements_perf = determine_performance(engagements, engagements_thresholds, engagements_labels)
+engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_thresholds, engagement_rate_labels)
+views_perf = determine_performance(views, views_thresholds, views_labels)
+
 # --- Projection pour une performance idéale ---
 ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
 ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
@@ -335,7 +340,7 @@ with col2:
             <div style='display: flex; align-items: center;'>
                 <span style='font-size: 2em;'>{performance_icon}</span>
                 <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
-                    Performance globale
+                    Performance globale : {global_performance}
                 </span>
             </div>
             """,
