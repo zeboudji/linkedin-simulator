@@ -254,11 +254,13 @@ with col2:
         st.subheader("Indicateurs de Performance")
         
         # Utilisation de st.metric pour les indicateurs clés
-        col_perf1, col_perf2 = st.columns(2)
+        col_perf1, col_perf2, col_perf3 = st.columns(3)
         with col_perf1:
             st.metric("Nombre total d'engagements", engagements)
         with col_perf2:
             st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+        with col_perf3:
+            st.metric("Nombre de vues", views)
         
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
@@ -328,16 +330,25 @@ with col2:
             - **Engagez davantage vos abonnés** : Posez des questions ou invitez-les à donner leur avis dans les commentaires.
             - **Répondez à tous les commentaires** : Encouragez la discussion pour maintenir l'engagement.
             - **Partagez le post à des moments stratégiques** : Publiez lorsque vos abonnés sont les plus actifs.
+            - **Meilleurs moments pour publier** :
+                - **Jours** : Mardi et jeudi.
+                - **Heures** : Entre 10h et 11h.
             """)
         elif engagement_rate < 10:
             st.markdown("""
             - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
             - **Mentionnez ou taguez** des personnes pour encourager leur participation.
+            - **Optimisez vos horaires de publication** :
+                - **Jours** : Mardi, mercredi et jeudi.
+                - **Heures** : Entre 9h et 12h.
             """)
         else:
             st.markdown("""
             - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
             - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
+            - **Maximisez l'impact de vos publications** :
+                - **Jours** : Mardi et jeudi.
+                - **Heures** : Entre 8h et 10h ou entre 12h et 14h.
             """)
 
 # --- Footer ---
@@ -350,3 +361,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
