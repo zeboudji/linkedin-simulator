@@ -64,7 +64,7 @@ def sync_input_with_slider(input_key, slider_key):
 def sync_slider_with_input(slider_key, input_key):
     st.session_state[input_key] = st.session_state[slider_key]
 
-# --- Fonction pour déterminer la performance et retourner l'indice ---
+# --- Fonction pour déterminer l'indice de performance ---
 def determine_performance_index(value, thresholds):
     for i, threshold in enumerate(thresholds):
         if value < threshold:
@@ -72,13 +72,13 @@ def determine_performance_index(value, thresholds):
     return len(thresholds)
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
-engagements_thresholds = [5, 10, 40, 50]  # Ajusté pour plus de granularité
+engagements_thresholds = [100, 250, 500, 750]  # Ajusté pour plus de granularité
 engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Bon, Excellent
 
-engagement_rate_thresholds = [1, 2, 4, 10]
+engagement_rate_thresholds = [1, 2, 4, 6]  # En pourcentage
 engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
 
-views_thresholds = [500, 1000, 3000]
+views_thresholds = [1000, 2000, 3000, 4000]  # Ajusté pour refléter plus de granularité
 views_labels = ["😟", "👍", "😊", "🔥"]  # Médiocre, Correct, Bon, Vrai buzz!
 
 # --- Définition des seuils, labels et icônes pour la performance globale ---
@@ -238,10 +238,10 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 2000  # Réduit pour augmenter la contribution des vues
-max_engagements = 500  # Exemple
-max_engagement_rate = 10  # 10%
-max_followers = 1000  # Exemple
+max_views = 5000  # Ajusté pour refléter une gamme réaliste
+max_engagements = 1000  # Exemple
+max_engagement_rate = 20  # 20%
+max_followers = 10_000  # Ajusté pour correspondre à la plage d'abonnés
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
@@ -252,11 +252,11 @@ normalized_followers = min(followers / max_followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
-# Donner un poids important aux vues
-weight_views = 0.95
-weight_engagements = 0.025
-weight_engagement_rate = 0.01
-weight_followers = 0.01
+# Donner un poids important aux vues et aux engagements
+weight_views = 0.80
+weight_engagements = 0.15
+weight_engagement_rate = 0.03
+weight_followers = 0.015
 weight_time = 0.005
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
@@ -270,6 +270,12 @@ global_score = (
 ) * 100  # Pour obtenir un score sur 100
 
 # --- Détermination de la performance globale (retourne l'indice) ---
+def determine_performance_index(value, thresholds):
+    for i, threshold in enumerate(thresholds):
+        if value < threshold:
+            return i
+    return len(thresholds)
+
 global_performance_index = determine_performance_index(global_score, global_performance_thresholds)
 
 # --- Récupération du label et de l'icône ---
@@ -366,7 +372,7 @@ with col2:
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Vues / Max Vues) * 50 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 15 + (Abonnés / Max Abonnés) * 5 + ((Max heures - Heures écoulées) / Max heures) * 5</p>
+            Performance Globale = (Vues / Max Vues) * 80 + (Engagements / Max Engagements) * 15 + (Taux d'engagement / Max Taux d'engagement) * 3 + (Abonnés / Max Abonnés) * 1.5 + ((Max heures - Heures écoulées) / Max heures) * 0.5</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -381,7 +387,7 @@ with col2:
         # Encadré Stylisé pour la Projection
         st.markdown(
             f"""
-            <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
+            <div style='background-color: #e6f7ff; border-left: 5px solid #1890ff; padding: 15px; border-radius: 5px;'>
                 <div style='display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;'>
                     <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>👍</span><br>
