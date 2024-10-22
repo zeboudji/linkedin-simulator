@@ -233,7 +233,7 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 1_000  # Réduit pour augmenter la contribution des vues
+max_views = 2_000  # Réduit pour augmenter la contribution des vues
 max_engagements = 500  # Exemple
 max_engagement_rate = 10  # 20%
 max_followers = 1000  # Exemple
