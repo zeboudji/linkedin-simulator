@@ -93,7 +93,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -103,7 +103,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -117,7 +117,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=100_000,
+        max_value=10_000,
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -127,7 +127,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=100_000,  # Ajusté pour une plus grande flexibilité
+        max_value=10_000,  # Ajusté pour une plus grande flexibilité
         value=st.session_state.views,
         step=500,
         key='views_slider',
