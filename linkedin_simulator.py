@@ -292,9 +292,9 @@ views_perf = determine_performance(views, views_thresholds, views_labels)
 
 # --- Projection pour une performance idéale ---
 # Définir des projections basées sur les vues actuelles
-ideal_likes = (0.1 * views) if views > 0 else 100
-ideal_comments = (0.05 * views) if views > 0 else 50
-ideal_shares = (0.02 * views) if views > 0 else 20
+ideal_likes = (0.05 * views) if views > 0 else 100
+ideal_comments = (0.02 * views) if views > 0 else 50
+ideal_shares = (0.01 * views) if views > 0 else 20
 
 # --- Affichage des résultats dans la deuxième colonne ---
 with col2:
