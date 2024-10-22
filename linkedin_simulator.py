@@ -72,8 +72,8 @@ def determine_performance(value, thresholds, labels):
     return labels[-1]
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
-engagements_thresholds = [5,10,40,50]
-engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Élevé
+engagements_thresholds = [5, 10, 40, 50]  # Ajusté pour plus de granularité
+engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Bon, Excellent
 
 engagement_rate_thresholds = [2, 5, 10]
 engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
@@ -240,33 +240,62 @@ ideal_views = int(followers * proportion_factor)
 if ideal_views < 3000:
     ideal_views = 3000
 
-# --- Calcul des indicateurs de performance ---
-engagements_perf = determine_performance(engagements, engagements_thresholds, engagements_labels)
-engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_thresholds, engagement_rate_labels)
-views_perf = determine_performance(views, views_thresholds, views_labels)
+# --- Normalisation des métriques ---
+# Définir des valeurs maximales hypothétiques pour la normalisation
+max_engagements = 1000  # Exemple
+max_engagement_rate = 20  # 20%
+max_views = ideal_views  # Seuil de buzz dynamique
+max_followers = 100_000  # Exemple
+max_hours = 72  # Maximum du slider
+
+# Normaliser chaque métrique
+normalized_engagements = min(engagements / max_engagements, 1)
+normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
+normalized_views = min(views / max_views, 1)
+normalized_followers = min(followers / max_followers, 1)
+normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
+
+# --- Attribution des poids ---
+weight_engagements = 0.30
+weight_engagement_rate = 0.25
+weight_views = 0.20
+weight_followers = 0.15
+weight_time = 0.10
+
+# --- Calcul du score global ---
+global_score = (
+    normalized_engagements * weight_engagements +
+    normalized_engagement_rate * weight_engagement_rate +
+    normalized_views * weight_views +
+    normalized_followers * weight_followers +
+    normalized_time * weight_time
+) * 100  # Pour obtenir un score sur 100
+
+# --- Définition des seuils pour la performance globale ---
+global_performance_thresholds = [50, 70, 85]
+global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
+
+# --- Détermination de la performance globale ---
+global_performance = determine_performance(global_score, global_performance_thresholds, global_performance_labels)
+
+# --- Couleurs associées à chaque catégorie de performance ---
+performance_colors = {
+    "😟": "#FF4B4B",  # Rouge vif
+    "😐": "#FFA500",  # Orange
+    "🙂": "#32CD32",  # Vert lime
+    "🔥": "#1E90FF"   # Bleu dodger
+}
+
+# --- Détermination de la couleur basée sur la performance ---
+performance_color = performance_colors.get(global_performance, "#FFFFFF")
+
+# --- Détermination de l'icône basée sur la performance ---
+performance_icon = global_performance
 
 # --- Projection pour une performance idéale ---
 ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
 ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
 ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
-
-# --- Détermination de la performance actuelle du post ---
-if views < 500:
-    performance = "Médiocre 😟"
-    performance_color = "#FF4B4B"  # Rouge vif
-    performance_icon = "😟"
-elif 500 <= views < 1000:
-    performance = "Correct 👍"
-    performance_color = "#FFA500"  # Orange
-    performance_icon = "👍"
-elif 1000 <= views < 3000:
-    performance = "Bon 😊"
-    performance_color = "#32CD32"  # Vert lime
-    performance_icon = "😊"
-else:
-    performance = "Vrai buzz! 🔥"
-    performance_color = "#1E90FF"  # Bleu dodger
-    performance_icon = "🔥"
 
 # --- Affichage des résultats dans la deuxième colonne ---
 with col2:
@@ -306,7 +335,7 @@ with col2:
             <div style='display: flex; align-items: center;'>
                 <span style='font-size: 2em;'>{performance_icon}</span>
                 <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
-                    Performance globale : {performance}
+                    Performance globale
                 </span>
             </div>
             """,
@@ -315,14 +344,22 @@ with col2:
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
 
-        # Bulle d'info pour expliquer le calcul du taux d'engagement
+        # Bulle d'info pour expliquer le calcul de la performance globale
         st.markdown(
             """
             <details>
-            <summary><strong>Comment est calculé le taux d'engagement ?</strong></summary>
-            <p>Le taux d'engagement est calculé en divisant le nombre total d'engagements (likes, commentaires, partages) par le nombre total de vues, puis en multipliant par 100 pour obtenir un pourcentage.</p>
+            <summary><strong>Comment est calculée la performance globale ?</strong></summary>
+            <p>La performance globale est calculée en combinant plusieurs métriques clés :</p>
+            <ul>
+                <li><strong>Nombre total d'engagements</strong> : Somme des likes, commentaires et partages.</li>
+                <li><strong>Taux d'engagement</strong> : (Engagements / Vues) * 100.</li>
+                <li><strong>Nombre de vues</strong> : Nombre total de vues de la publication.</li>
+                <li><strong>Nombre d'abonnés</strong> : Nombre total d'abonnés de votre profil.</li>
+                <li><strong>Temps écoulé depuis la publication</strong> : Nombre d'heures écoulées depuis la publication.</li>
+            </ul>
+            <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Taux d'engagement (%) = (Engagements / Vues) * 100</p>
+            Performance Globale = (Engagements / Max Engagements) * 30 + (Taux d'engagement / Max Taux d'engagement) * 25 + (Vues / Seuil de buzz) * 20 + (Abonnés / Max Abonnés) * 15 + ((Max heures - Heures écoulées) / Max heures) * 10</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -365,39 +402,35 @@ with col2:
 
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
-        if engagement_rate < 5:
+        if global_score < 50:
             st.markdown("""
-            - **Engagez davantage vos abonnés** : Posez des questions ou invitez-les à donner leur avis dans les commentaires.
-            - **Répondez à tous les commentaires** : Encouragez la discussion pour maintenir l'engagement.
-            - **Partagez le post à des moments stratégiques** : Publiez lorsque vos abonnés sont les plus actifs.
-            - **Meilleurs moments pour publier** :
-                - **Jours** : Mardi et jeudi.
-                - **Heures** : Entre 10h et 11h.
-            - **Stratégies supplémentaires** :
-                - **Type de Contenu** : Publiez plus de contenus visuels ou interactifs.
-                - **Utilisation des Hashtags** : Utilisez des hashtags pertinents et populaires.
+            - **Augmentez vos engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
+            - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
+            - **Améliorez le contenu** : Publiez du contenu plus interactif et visuellement attrayant.
+            - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
+            - **Engagez-vous avec votre communauté** : Répondez aux commentaires et participez aux discussions.
             """)
-        elif engagement_rate < 10:
+        elif global_score < 70:
             st.markdown("""
-            - **Vous êtes sur la bonne voie !** Pour améliorer encore, augmentez les interactions en posant des questions ouvertes.
-            - **Mentionnez ou taguez** des personnes pour encourager leur participation.
-            - **Optimisez vos horaires de publication** :
-                - **Jours** : Mardi, mercredi et jeudi.
-                - **Heures** : Entre 9h et 12h.
-            - **Stratégies supplémentaires** :
-                - **Type de Contenu** : Variez les formats (vidéos, infographies).
-                - **Utilisation des Hashtags** : Intégrez des hashtags de niche pour toucher une audience spécifique.
+            - **Continuez à engager vos abonnés** : Posez des questions ouvertes pour stimuler les discussions.
+            - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
+            - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
+            - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
+            """)
+        elif global_score < 85:
+            st.markdown("""
+            - **Maintenez vos bonnes pratiques** : Continuez à publier du contenu engageant et pertinent.
+            - **Encouragez le partage** : Incitez vos abonnés à partager vos publications pour augmenter votre portée.
+            - **Collaborez avec d'autres utilisateurs** : Participez à des collaborations pour élargir votre audience.
+            - **Utilisez des appels à l'action** pour inciter à l'engagement.
             """)
         else:
             st.markdown("""
-            - **Excellent travail !** Continuez à répondre aux commentaires pour maintenir ce niveau d'engagement.
-            - **Encouragez le partage du post** pour atteindre encore plus d'abonnés.
-            - **Maximisez l'impact de vos publications** :
-                - **Jours** : Mardi et jeudi.
-                - **Heures** : Entre 8h et 10h ou entre 12h et 14h.
-            - **Stratégies supplémentaires** :
-                - **Type de Contenu** : Publiez des contenus exclusifs ou en avant-première.
-                - **Utilisation des Hashtags** : Créez et promouvez un hashtag de marque unique.
+            - **Excellent travail !** Continuez à maintenir votre haut niveau d'engagement.
+            - **Maximisez l'impact de vos publications** en publiant du contenu exclusif ou en avant-première.
+            - **Développez votre marque personnelle** en créant un hashtag unique et en le promouvant.
+            - **Interagissez régulièrement** avec votre communauté pour renforcer les relations.
+            - **Analysez et ajustez continuellement** votre stratégie pour rester performant.
             """)
 
 # --- Footer ---
