@@ -93,7 +93,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=10_000,
+        max_value=100_000,
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -103,7 +103,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,
+        max_value=100_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -127,7 +127,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,  # Ajusté pour une plus grande flexibilité
+        max_value=10_000,
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -162,7 +162,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=2000,  # Ajusté pour une plus grande flexibilité
+        max_value=2000,
         value=st.session_state.likes,
         step=1,
         key='likes_slider',
@@ -233,10 +233,10 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_engagements = 1000  # Exemple
+max_views = 5_000  # Ajusté pour que 1 500 vues pour 5 000 abonnés tombe dans "Bon"
+max_engagements = 1_000  # Exemple
 max_engagement_rate = 20  # 20%
 max_followers = 100_000  # Exemple
-max_views = 10_000  # Définir une valeur maximale pour les vues
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
@@ -248,13 +248,12 @@ normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus l
 
 # --- Attribution des poids ---
 # Donner un poids important aux vues
-weight_views = 0.70
-weight_engagements = 0.15
-weight_engagement_rate = 0.05
-weight_followers = 0.05
+weight_views = 0.40
+weight_engagements = 0.25
+weight_engagement_rate = 0.20
+weight_followers = 0.10
 weight_time = 0.05
 # Assurez-vous que la somme des poids est égale à 1 (100%)
-# weight_views + weight_engagements + weight_engagement_rate + weight_followers + weight_time = 1.00
 
 # --- Calcul du score global ---
 global_score = (
@@ -266,7 +265,7 @@ global_score = (
 ) * 100  # Pour obtenir un score sur 100
 
 # --- Définition des seuils pour la performance globale ---
-global_performance_thresholds = [20, 30, 60]
+global_performance_thresholds = [35, 60, 80]
 global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
 
 # --- Détermination de la performance globale ---
@@ -359,7 +358,7 @@ with col2:
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Vues / Max Vues) * 30 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 20 + (Abonnés / Max Abonnés) * 15 + ((Max heures - Heures écoulées) / Max heures) * 10</p>
+            Performance Globale = (Vues / Max Vues) * 40 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 20 + (Abonnés / Max Abonnés) * 10 + ((Max heures - Heures écoulées) / Max heures) * 5</p>
             </details>
             """,
             unsafe_allow_html=True
