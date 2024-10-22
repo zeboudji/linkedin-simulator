@@ -2,7 +2,8 @@ from PIL import Image
 import streamlit as st
 import base64
 from io import BytesIO
-import pandas as pd  # Si vous utilisez des graphiques
+import pandas as pd
+import altair as alt
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -340,6 +341,24 @@ with col2:
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
 
+        # Visualisation de la Performance Globale
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
         # Bulle d'info pour expliquer le calcul de la performance globale
         st.markdown(
             """
@@ -367,7 +386,7 @@ with col2:
 
         st.divider()
 
-        # Projection pour une performance idéale
+        # Projection pour une Performance Idéale
         st.subheader("Projection pour une Performance Idéale")
         st.write("Pour améliorer votre performance, vous pourriez viser environ :")
 
@@ -396,37 +415,49 @@ with col2:
 
         st.divider()
 
+        # Visualisation de la Performance Globale avec un Graphique à Gauges
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
-        if global_score < 50:
+        if global_performance == "Médiocre":
             st.markdown("""
-            - **Augmentez vos vues et réactions** : Encouragez vos abonnés à liker, commenter et partager vos publications.
-            - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
-            - **Améliorez le contenu** : Publiez du contenu plus interactif et visuellement attrayant.
-            - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
-            - **Engagez-vous avec votre communauté** : Répondez aux commentaires et participez aux discussions.
+            - **Augmentez vos vues** : Partagez vos publications à des heures de pointe et utilisez des hashtags populaires.
+            - **Stimulez les réactions** : Encouragez vos abonnés à liker et commenter en posant des questions ouvertes.
+            - **Optimisez le contenu** : Publiez du contenu plus interactif et visuellement attrayant.
             """)
-        elif global_score < 70:
+        elif global_performance == "Correct":
             st.markdown("""
-            - **Continuez à augmenter vos vues et réactions** : Posez des questions ouvertes pour stimuler les discussions.
-            - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
-            - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
-            - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
+            - **Augmentez vos vues** : Collaborez avec d'autres utilisateurs pour élargir votre audience.
+            - **Maintenez les réactions** : Continuez à interagir avec les commentaires et les partages.
+            - **Variez le contenu** : Intégrez des vidéos et des infographies pour diversifier vos publications.
             """)
-        elif global_score < 85:
+        elif global_performance == "Bon":
             st.markdown("""
-            - **Maintenez vos bonnes pratiques** : Continuez à publier du contenu engageant et pertinent.
-            - **Encouragez le partage** : Incitez vos abonnés à partager vos publications pour augmenter votre portée.
-            - **Collaborez avec d'autres utilisateurs** : Participez à des collaborations pour élargir votre audience.
-            - **Utilisez des appels à l'action** pour inciter à l'engagement.
+            - **Maximisez vos vues** : Utilisez des contenus visuels attractifs comme des vidéos et des infographies.
+            - **Optimisez les réactions** : Proposez des appels à l'action clairs pour inciter au partage.
+            - **Engagez davantage** : Répondez rapidement aux interactions et participez activement aux discussions.
             """)
         else:
             st.markdown("""
-            - **Excellent travail !** Continuez à maintenir votre haut niveau d'engagement.
-            - **Maximisez l'impact de vos publications** en publiant du contenu exclusif ou en avant-première.
-            - **Développez votre marque personnelle** en créant un hashtag unique et en le promouvant.
-            - **Interagissez régulièrement** avec votre communauté pour renforcer les relations.
-            - **Analysez et ajustez continuellement** votre stratégie pour rester performant.
+            - **Continuez vos excellentes pratiques** : Maintenez un haut niveau d'engagement et explorez de nouvelles stratégies de contenu.
+            - **Développez votre réseau** : Engagez-vous avec des leaders d'opinion et participez à des discussions pertinentes.
+            - **Innover** : Explorez de nouveaux formats de contenu et technologies pour rester à la pointe.
             """)
 
 # --- Footer ---
