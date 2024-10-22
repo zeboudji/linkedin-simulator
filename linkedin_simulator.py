@@ -272,7 +272,7 @@ global_score = (
 ) * 100  # Pour obtenir un score sur 100
 
 # --- Définition des seuils pour la performance globale ---
-global_performance_thresholds = [50, 70, 85]
+global_performance_thresholds = [25, 35, 45]
 global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
 
 # --- Détermination de la performance globale ---
