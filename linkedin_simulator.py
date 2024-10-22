@@ -71,15 +71,15 @@ def determine_performance(value, thresholds, labels):
             return label
     return labels[-1]
 
-# --- Définition des seuils et labels pour chaque métrique ---
+# --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
 engagements_thresholds = [20, 50]
-engagements_labels = ["Faible", "Moyen", "Élevé"]
+engagements_labels = ["Faible 😟", "Moyen 😐", "Élevé 🙂"]
 
 engagement_rate_thresholds = [2, 5, 10]
-engagement_rate_labels = ["À améliorer", "Correct", "Bon", "Excellent"]
+engagement_rate_labels = ["À améliorer 😕", "Correct 👍", "Bon 😊", "Excellent 🚀"]
 
 views_thresholds = [500, 1000, 3000]
-views_labels = ["Médiocre", "Correct", "Bon", "Vrai buzz!"]
+views_labels = ["Médiocre 😟", "Correct 👍", "Bon 😊", "Vrai buzz! 🔥"]
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -252,19 +252,19 @@ ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
 
 # --- Détermination de la performance actuelle du post ---
 if views < 500:
-    performance = "Médiocre"
+    performance = "Médiocre 😟"
     performance_color = "#FF4B4B"  # Rouge vif
     performance_icon = "😟"
 elif 500 <= views < 1000:
-    performance = "Correct"
+    performance = "Correct 👍"
     performance_color = "#FFA500"  # Orange
     performance_icon = "😐"
 elif 1000 <= views < 3000:
-    performance = "Bonne"
+    performance = "Bonne 😊"
     performance_color = "#32CD32"  # Vert lime
     performance_icon = "🙂"
 else:
-    performance = "Vrai buzz!"
+    performance = "Vrai buzz! 🔥"
     performance_color = "#1E90FF"  # Bleu dodger
     performance_icon = "🔥"
 
