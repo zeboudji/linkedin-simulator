@@ -100,7 +100,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=50_000,
+        max_value=10_000,
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -110,7 +110,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=50_000,  # Correction de la limite pour correspondre au number_input
+        max_value=10_000,  # Correction de la limite pour correspondre au number_input
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -135,9 +135,9 @@ with col1:
     st.number_input(
         "Entrez le nombre de likes",
         min_value=0,
-        max_value=500,
+        max_value=200,
         value=st.session_state.likes,
-        step=10,
+        step=1,
         key='likes_input',
         on_change=sync_input_with_slider,
         args=('likes_input', 'likes_slider')
@@ -145,9 +145,9 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=500,  # Correction de la limite pour correspondre au number_input
+        max_value=200,  # Correction de la limite pour correspondre au number_input
         value=st.session_state.likes,
-        step=10,
+        step=1,
         key='likes_slider',
         on_change=sync_slider_with_input,
         args=('likes_slider', 'likes_input')
@@ -159,9 +159,9 @@ with col1:
     st.number_input(
         "Entrez le nombre de commentaires",
         min_value=0,
-        max_value=500,
+        max_value=100,
         value=st.session_state.comments,
-        step=5,
+        step=1,
         key='comments_input',
         on_change=sync_input_with_slider,
         args=('comments_input', 'comments_slider')
@@ -169,9 +169,9 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=500,
+        max_value=100,
         value=st.session_state.comments,
-        step=5,
+        step=1,
         key='comments_slider',
         on_change=sync_slider_with_input,
         args=('comments_slider', 'comments_input')
@@ -183,9 +183,9 @@ with col1:
     st.number_input(
         "Entrez le nombre de partages",
         min_value=0,
-        max_value=200,
+        max_value=100,
         value=st.session_state.shares,
-        step=5,
+        step=1,
         key='shares_input',
         on_change=sync_input_with_slider,
         args=('shares_input', 'shares_slider')
@@ -193,9 +193,9 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=200,
+        max_value=100,
         value=st.session_state.shares,
-        step=5,
+        step=1,
         key='shares_slider',
         on_change=sync_slider_with_input,
         args=('shares_slider', 'shares_input')
