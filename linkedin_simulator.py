@@ -72,8 +72,8 @@ def determine_performance(value, thresholds, labels):
     return labels[-1]
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
-engagements_thresholds = [5,10,40,50]
-engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Élevé
+engagements_thresholds = [5,10,40,50]engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Élevé
+
 
 engagement_rate_thresholds = [2, 5, 10]
 engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
