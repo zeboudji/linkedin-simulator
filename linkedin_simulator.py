@@ -233,7 +233,7 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 5_000  # Ajusté pour que 1 500 vues pour 5 000 abonnés tombe dans "Bon"
+max_views = 4_000  # Réduit pour augmenter la contribution des vues
 max_engagements = 1_000  # Exemple
 max_engagement_rate = 20  # 20%
 max_followers = 100_000  # Exemple
@@ -248,11 +248,11 @@ normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus l
 
 # --- Attribution des poids ---
 # Donner un poids important aux vues
-weight_views = 0.90
-weight_engagements = 0.05
-weight_engagement_rate = 0.025
-weight_followers = 0.020
-weight_time = 0.005
+weight_views = 0.40
+weight_engagements = 0.25
+weight_engagement_rate = 0.20
+weight_followers = 0.10
+weight_time = 0.05
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
@@ -265,7 +265,7 @@ global_score = (
 ) * 100  # Pour obtenir un score sur 100
 
 # --- Définition des seuils pour la performance globale ---
-global_performance_thresholds = [10, 25, 45]
+global_performance_thresholds = [35, 60, 80]
 global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
 
 # --- Détermination de la performance globale ---
@@ -273,14 +273,14 @@ global_performance = determine_performance(global_score, global_performance_thre
 
 # --- Couleurs associées à chaque catégorie de performance ---
 performance_colors = {
-    "😟 Médiocre": "#FF4B4B",  # Rouge vif
-    "😐 Correct": "#FFA500",  # Orange
-    "🙂 Bon": "#32CD32",  # Vert lime
-    "🔥 Excellent": "#1E90FF"   # Bleu dodger
+    "😟": "#FF4B4B",  # Rouge vif
+    "😐": "#FFA500",  # Orange
+    "🙂": "#32CD32",  # Vert lime
+    "🔥": "#1E90FF"   # Bleu dodger
 }
 
 # --- Détermination de la couleur basée sur la performance ---
-performance_color = performance_colors.get(global_performance, "#FFFFFF")
+performance_color = performance_colors.get(global_performance, "#000000")  # Défaut à noir
 
 # --- Détermination de l'icône basée sur la performance ---
 performance_icon = global_performance
@@ -331,7 +331,7 @@ with col2:
         # Performance globale avec icône et couleur
         st.markdown(
             f"""
-            <div style='display: flex; align-items: center;'>
+            <div style='display: flex; align-items: center; background-color: #f0f0f0; padding: 10px; border-radius: 5px;'>
                 <span style='font-size: 2em;'>{performance_icon}</span>
                 <span style='color:{performance_color}; font-weight:bold; font-size: 1.5em; margin-left: 10px;'>
                     Performance globale : {global_performance}
@@ -397,7 +397,7 @@ with col2:
 
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
-        if global_score < 50:
+        if global_score < 10:
             st.markdown("""
             - **Augmentez vos vues et engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
             - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
@@ -405,14 +405,14 @@ with col2:
             - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
             - **Engagez-vous avec votre communauté** : Répondez aux commentaires et participez aux discussions.
             """)
-        elif global_score < 70:
+        elif global_score < 25:
             st.markdown("""
             - **Continuez à augmenter vos vues et engagements** : Posez des questions ouvertes pour stimuler les discussions.
             - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
             - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
             - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
             """)
-        elif global_score < 85:
+        elif global_score < 45:
             st.markdown("""
             - **Maintenez vos bonnes pratiques** : Continuez à publier du contenu engageant et pertinent.
             - **Encouragez le partage** : Incitez vos abonnés à partager vos publications pour augmenter votre portée.
