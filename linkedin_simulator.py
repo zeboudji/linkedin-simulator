@@ -33,7 +33,8 @@ def increment_counter(namespace, key):
             data = response.json()
             return data['value']
         else:
-            st.error("Erreur lors de l'incrémentation du compteur de visiteurs.")
+            st.error(f"Erreur {response.status_code} lors de l'incrémentation du compteur de visiteurs.")
+            st.error(f"Réponse de l'API : {response.text}")
             return None
     except Exception as e:
         st.error(f"Erreur lors de la connexion à CountAPI : {e}")
@@ -47,16 +48,19 @@ def get_counter(namespace, key):
             data = response.json()
             return data.get('value', 0)
         else:
+            st.error(f"Erreur {response.status_code} lors de la récupération du compteur de visiteurs.")
+            st.error(f"Réponse de l'API : {response.text}")
             return 0
-    except:
+    except Exception as e:
+        st.error(f"Erreur lors de la connexion à CountAPI : {e}")
         return 0
 
 # --- Chargement et encodage du logo ---
 logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
 
 # --- Incrémentation du compteur ---
-namespace = "linkedin_simulator"  # Remplacez par votre propre namespace si nécessaire
-key_counter = "visitors"  # Remplacez par votre propre clé si nécessaire
+namespace = "linkedin_simulator_unique123"  # Remplacez par votre propre namespace unique
+key_counter = "visitors_unique123"  # Remplacez par votre propre clé unique
 visitor_count = increment_counter(namespace, key_counter)
 
 # --- Affichage du logo et du titre ---
