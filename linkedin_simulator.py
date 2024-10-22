@@ -245,6 +245,7 @@ normalized_followers = min(followers / max_followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
+# Supprimer le poids pour les vues et réajuster les autres poids pour totaliser 1 (100%)
 weight_engagements = 0.35
 weight_engagement_rate = 0.30
 weight_followers = 0.20
@@ -285,7 +286,7 @@ engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_th
 views_perf = determine_performance(views, views_thresholds, views_labels)
 
 # --- Projection pour une performance idéale ---
-# Puisque le seuil de buzz est supprimé, nous pouvons définir des projections basées sur des objectifs généraux
+# Puisque le seuil de buzz est supprimé, définir des projections basées sur les vues actuelles
 ideal_likes = (0.1 * views) if views > 0 else 100
 ideal_comments = (0.05 * views) if views > 0 else 50
 ideal_shares = (0.02 * views) if views > 0 else 20
