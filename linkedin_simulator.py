@@ -248,11 +248,11 @@ normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus l
 
 # --- Attribution des poids ---
 # Donner un poids important aux vues
-weight_views = 0.40
-weight_engagements = 0.25
-weight_engagement_rate = 0.20
-weight_followers = 0.10
-weight_time = 0.05
+weight_views = 0.90
+weight_engagements = 0.025
+weight_engagement_rate = 0.01
+weight_followers = 0.01
+weight_time = 0.005
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
