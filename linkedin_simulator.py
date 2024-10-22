@@ -266,7 +266,7 @@ global_score = (
 
 # --- Définition des seuils pour la performance globale ---
 global_performance_thresholds = [10, 25, 45]
-global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
+global_performance_labels = ["😟 Médiocre", "😐 Correct", "🙂 Bon", "🔥 Excellent"]  # Médiocre, Correct, Bon, Excellent
 
 # --- Détermination de la performance globale ---
 global_performance = determine_performance(global_score, global_performance_thresholds, global_performance_labels)
