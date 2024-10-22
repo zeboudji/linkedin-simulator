@@ -3,6 +3,7 @@ import streamlit as st
 import base64
 from io import BytesIO
 import pandas as pd
+import altair as alt
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -317,8 +318,7 @@ with col2:
             st.metric("Nombre total de réactions", f"{reactions}")
             st.markdown(f"<div style='text-align: center; font-size: 1em;'>{reactions_labels[reactions_perf_index]}</div>", unsafe_allow_html=True)
         with col_perf3:
-            engagement_rate = (reactions / views * 100) if views > 0 else 0
-            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+            st.metric("Taux d'engagement", f"{(reactions / views * 100) if views > 0 else 0:.2f}%")
             st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de label pour taux d'engagement
         with col_perf4:
             st.metric("Nombre d'abonnés", f"{followers}")
@@ -340,6 +340,24 @@ with col2:
         )
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
+
+        # Visualisation de la Performance Globale
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
 
         # Bulle d'info pour expliquer le calcul de la performance globale
         st.markdown(
@@ -396,6 +414,24 @@ with col2:
         )
 
         st.divider()
+
+        # Visualisation de la Performance Globale avec un Graphique à Gauges
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
 
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
