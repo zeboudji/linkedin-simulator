@@ -233,9 +233,10 @@ else:
     performance_icon = "🔥"
 
 # Projection pour une performance idéale
-ideal_likes = (0.1 * views) if views > 0 else 100
-ideal_comments = (0.05 * views) if views > 0 else 50
-ideal_shares = (0.02 * views) if views > 0 else 20
+ideal_views = 3000  # Seuil pour "Vrai buzz!"
+ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
+ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
+ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
 
 # --- Affichage des résultats dans la deuxième colonne ---
 with col2:
@@ -254,14 +255,16 @@ with col2:
         st.subheader("Indicateurs de Performance")
         
         # Utilisation de st.metric pour les indicateurs clés
-        col_perf1, col_perf2, col_perf3 = st.columns(3)
+        col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
             st.metric("Nombre total d'engagements", engagements)
         with col_perf2:
             st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
         with col_perf3:
             st.metric("Nombre de vues", views)
-        
+        with col_perf4:
+            st.metric("Seuil de buzz", ideal_views)
+
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
         # Performance globale avec icône et couleur
@@ -303,6 +306,10 @@ with col2:
             f"""
             <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
                 <div style='display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;'>
+                    <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
+                        <span style='font-size: 2em;'>👀</span><br>
+                        <strong>{ideal_views} Vues</strong>
+                    </div>
                     <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>👍</span><br>
                         <strong>{ideal_likes:.0f} Likes</strong>
@@ -361,4 +368,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
