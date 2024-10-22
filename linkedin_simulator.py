@@ -273,10 +273,10 @@ global_performance = determine_performance(global_score, global_performance_thre
 
 # --- Couleurs associées à chaque catégorie de performance ---
 performance_colors = {
-    "😟": "#FF4B4B",  # Rouge vif
-    "😐": "#FFA500",  # Orange
-    "🙂": "#32CD32",  # Vert lime
-    "🔥": "#1E90FF"   # Bleu dodger
+    "😟 Médiocre": "#FF4B4B",  # Rouge vif
+    "😐 Correct": "#FFA500",  # Orange
+    "🙂 Bon": "#32CD32",  # Vert lime
+    "🔥 Excellent": "#1E90FF"   # Bleu dodger
 }
 
 # --- Détermination de la couleur basée sur la performance ---
