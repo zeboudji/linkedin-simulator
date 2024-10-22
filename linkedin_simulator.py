@@ -397,7 +397,7 @@ with col2:
 
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
-        if global_score < 10:
+        if global_score < 30:
             st.markdown("""
             - **Augmentez vos vues et engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
             - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
@@ -405,14 +405,14 @@ with col2:
             - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
             - **Engagez-vous avec votre communauté** : Répondez aux commentaires et participez aux discussions.
             """)
-        elif global_score < 25:
+        elif global_score < 60:
             st.markdown("""
             - **Continuez à augmenter vos vues et engagements** : Posez des questions ouvertes pour stimuler les discussions.
             - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
             - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
             - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
             """)
-        elif global_score < 45:
+        elif global_score < 80:
             st.markdown("""
             - **Maintenez vos bonnes pratiques** : Continuez à publier du contenu engageant et pertinent.
             - **Encouragez le partage** : Incitez vos abonnés à partager vos publications pour augmenter votre portée.
