@@ -64,12 +64,12 @@ def sync_input_with_slider(input_key, slider_key):
 def sync_slider_with_input(slider_key, input_key):
     st.session_state[input_key] = st.session_state[slider_key]
 
-# --- Fonction pour déterminer la performance ---
-def determine_performance(value, thresholds, labels):
-    for threshold, label in zip(thresholds, labels):
+# --- Fonction pour déterminer la performance et retourner l'indice ---
+def determine_performance_index(value, thresholds):
+    for i, threshold in enumerate(thresholds):
         if value < threshold:
-            return label
-    return labels[-1]
+            return i
+    return len(thresholds)
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
 engagements_thresholds = [5, 10, 40, 50]  # Ajusté pour plus de granularité
@@ -80,6 +80,11 @@ engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Corr
 
 views_thresholds = [500, 1000, 3000]
 views_labels = ["😟", "👍", "😊", "🔥"]  # Médiocre, Correct, Bon, Vrai buzz!
+
+# --- Définition des seuils, labels et icônes pour la performance globale ---
+global_performance_thresholds = [35, 60, 80]
+global_performance_labels = ["Médiocre", "Correct", "Bon", "Excellent"]  # Médiocre, Correct, Bon, Excellent
+global_performance_icons = ["😟", "😐", "🙂", "🔥"]  # Correspondants aux labels
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -233,9 +238,9 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 2_000  # Réduit pour augmenter la contribution des vues
+max_views = 2000  # Réduit pour augmenter la contribution des vues
 max_engagements = 500  # Exemple
-max_engagement_rate = 10  # 20%
+max_engagement_rate = 10  # 10%
 max_followers = 1000  # Exemple
 max_hours = 72  # Maximum du slider
 
@@ -264,31 +269,33 @@ global_score = (
     normalized_time * weight_time
 ) * 100  # Pour obtenir un score sur 100
 
-# --- Définition des seuils pour la performance globale ---
-global_performance_thresholds = [35, 60, 80]
-global_performance_labels = ["Médiocre 😟", "Correct 😐", "Bon 🙂", "Excellent 🔥"]  # Médiocre, Correct, Bon, Excellent
+# --- Détermination de la performance globale (retourne l'indice) ---
+global_performance_index = determine_performance_index(global_score, global_performance_thresholds)
 
-# --- Détermination de la performance globale ---
-global_performance = determine_performance(global_score, global_performance_thresholds, global_performance_labels)
+# --- Récupération du label et de l'icône ---
+if global_performance_index < len(global_performance_labels):
+    global_performance = global_performance_labels[global_performance_index]
+    performance_icon = global_performance_icons[global_performance_index]
+else:
+    # Cas où la performance dépasse tous les seuils
+    global_performance = global_performance_labels[-1]
+    performance_icon = global_performance_icons[-1]
 
 # --- Couleurs associées à chaque catégorie de performance ---
 performance_colors = {
-    "😟": "#FF4B4B",  # Rouge vif
-    "😐": "#FFA500",  # Orange
-    "🙂": "#32CD32",  # Vert lime
-    "🔥": "#1E90FF"   # Bleu dodger
+    "Médiocre": "#FF4B4B",  # Rouge vif
+    "Correct": "#FFA500",    # Orange
+    "Bon": "#32CD32",        # Vert lime
+    "Excellent": "#1E90FF"   # Bleu dodger
 }
 
 # --- Détermination de la couleur basée sur la performance ---
 performance_color = performance_colors.get(global_performance, "#000000")  # Défaut à noir
 
-# --- Détermination de l'icône basée sur la performance ---
-performance_icon = global_performance
-
 # --- Calcul des indicateurs de performance individuels ---
-engagements_perf = determine_performance(engagements, engagements_thresholds, engagements_labels)
-engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_thresholds, engagement_rate_labels)
-views_perf = determine_performance(views, views_thresholds, views_labels)
+engagements_perf = determine_performance_index(engagements, engagements_thresholds)
+engagement_rate_perf = determine_performance_index(engagement_rate, engagement_rate_thresholds)
+views_perf = determine_performance_index(views, views_thresholds)
 
 # --- Projection pour une performance idéale ---
 # Définir des projections basées sur les vues actuelles
@@ -316,15 +323,16 @@ with col2:
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
             st.metric("Nombre de vues", f"{views}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_perf}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_labels[views_perf]}</div>", unsafe_allow_html=True)
         with col_perf2:
             st.metric("Nombre total d'engagements", f"{engagements}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_perf}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_labels[engagements_perf]}</div>", unsafe_allow_html=True)
         with col_perf3:
             st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_perf}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_labels[engagement_rate_perf]}</div>", unsafe_allow_html=True)
         with col_perf4:
             st.metric("Nombre d'abonnés", f"{followers}")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de performance label pour abonnés
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
