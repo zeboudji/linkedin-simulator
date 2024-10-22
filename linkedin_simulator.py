@@ -75,7 +75,7 @@ def determine_performance(value, thresholds, labels):
 engagements_thresholds = [5, 10, 40, 50]  # Ajusté pour plus de granularité
 engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Bon, Excellent
 
-engagement_rate_thresholds = [1, 2,4,10]
+engagement_rate_thresholds = [1, 2, 4, 10]
 engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
 
 views_thresholds = [500, 1000, 3000]
@@ -231,48 +231,35 @@ hours_since_posted = st.session_state.hours_since_posted
 engagements = likes + comments + shares
 engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
-# --- Calcul du seuil de buzz dynamique ---
-# Facteur de proportionnalité (par exemple, 0.6 pour obtenir 3000 vues pour 5000 abonnés)
-proportion_factor = 0.6
-ideal_views = int(followers * proportion_factor)
-
-# Assurer un seuil minimum de 3000 vues
-if ideal_views < 3000:
-    ideal_views = 3000
-
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
 max_engagements = 1000  # Exemple
 max_engagement_rate = 20  # 20%
-max_views = ideal_views  # Seuil de buzz dynamique
 max_followers = 100_000  # Exemple
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
 normalized_engagements = min(engagements / max_engagements, 1)
 normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
-normalized_views = min(views / max_views, 1)
 normalized_followers = min(followers / max_followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
-weight_engagements = 0.30
-weight_engagement_rate = 0.25
-weight_views = 0.20
-weight_followers = 0.15
-weight_time = 0.10
+weight_engagements = 0.35
+weight_engagement_rate = 0.30
+weight_followers = 0.20
+weight_time = 0.15
 
 # --- Calcul du score global ---
 global_score = (
     normalized_engagements * weight_engagements +
     normalized_engagement_rate * weight_engagement_rate +
-    normalized_views * weight_views +
     normalized_followers * weight_followers +
     normalized_time * weight_time
 ) * 100  # Pour obtenir un score sur 100
 
 # --- Définition des seuils pour la performance globale ---
-global_performance_thresholds = [25, 35, 45]
+global_performance_thresholds = [35, 60, 80]
 global_performance_labels = ["😟", "😐", "🙂", "🔥"]  # Médiocre, Correct, Bon, Excellent
 
 # --- Détermination de la performance globale ---
@@ -298,9 +285,10 @@ engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_th
 views_perf = determine_performance(views, views_thresholds, views_labels)
 
 # --- Projection pour une performance idéale ---
-ideal_likes = (0.1 * ideal_views) if ideal_views > 0 else 100
-ideal_comments = (0.05 * ideal_views) if ideal_views > 0 else 50
-ideal_shares = (0.02 * ideal_views) if ideal_views > 0 else 20
+# Puisque le seuil de buzz est supprimé, nous pouvons définir des projections basées sur des objectifs généraux
+ideal_likes = (0.1 * views) if views > 0 else 100
+ideal_comments = (0.05 * views) if views > 0 else 50
+ideal_shares = (0.02 * views) if views > 0 else 20
 
 # --- Affichage des résultats dans la deuxième colonne ---
 with col2:
@@ -330,7 +318,7 @@ with col2:
             st.metric("Nombre de vues", f"{views}")
             st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_perf}</div>", unsafe_allow_html=True)
         with col_perf4:
-            st.metric("Seuil de buzz", f"{ideal_views}")
+            st.metric("Nombre d'abonnés", f"{followers}")
 
         st.markdown("<br>", unsafe_allow_html=True)  # Espace entre les métriques et la performance globale
 
@@ -358,13 +346,12 @@ with col2:
             <ul>
                 <li><strong>Nombre total d'engagements</strong> : Somme des likes, commentaires et partages.</li>
                 <li><strong>Taux d'engagement</strong> : (Engagements / Vues) * 100.</li>
-                <li><strong>Nombre de vues</strong> : Nombre total de vues de la publication.</li>
                 <li><strong>Nombre d'abonnés</strong> : Nombre total d'abonnés de votre profil.</li>
                 <li><strong>Temps écoulé depuis la publication</strong> : Nombre d'heures écoulées depuis la publication.</li>
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Engagements / Max Engagements) * 30 + (Taux d'engagement / Max Taux d'engagement) * 25 + (Vues / Seuil de buzz) * 20 + (Abonnés / Max Abonnés) * 15 + ((Max heures - Heures écoulées) / Max heures) * 10</p>
+            Performance Globale = (Engagements / Max Engagements) * 35 + (Taux d'engagement / Max Taux d'engagement) * 30 + (Abonnés / Max Abonnés) * 20 + ((Max heures - Heures écoulées) / Max heures) * 15</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -372,19 +359,15 @@ with col2:
 
         st.divider()
 
-        # Projection pour un Buzz
-        st.subheader("Projection pour un Buzz")
-        st.write("Pour atteindre un buzz, il vous faudrait environ :")
+        # Projection pour une performance idéale
+        st.subheader("Projection pour une Performance Idéale")
+        st.write("Pour améliorer votre performance, vous pourriez viser environ :")
 
         # Encadré Stylisé pour la Projection
         st.markdown(
             f"""
             <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
                 <div style='display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;'>
-                    <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
-                        <span style='font-size: 2em;'>👀</span><br>
-                        <strong>{ideal_views} Vues</strong>
-                    </div>
                     <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>👍</span><br>
                         <strong>{ideal_likes:.0f} Likes</strong>
