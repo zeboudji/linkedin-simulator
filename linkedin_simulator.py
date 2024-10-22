@@ -236,23 +236,29 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 max_engagements = 1000  # Exemple
 max_engagement_rate = 20  # 20%
 max_followers = 100_000  # Exemple
+max_views = 10_000  # Définir une valeur maximale pour les vues
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
+normalized_views = min(views / max_views, 1)
 normalized_engagements = min(engagements / max_engagements, 1)
 normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
 normalized_followers = min(followers / max_followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
-# Supprimer le poids pour les vues et réajuster les autres poids pour totaliser 1 (100%)
-weight_engagements = 0.35
-weight_engagement_rate = 0.30
-weight_followers = 0.20
-weight_time = 0.15
+# Donner un poids important aux vues
+weight_views = 0.30
+weight_engagements = 0.25
+weight_engagement_rate = 0.20
+weight_followers = 0.15
+weight_time = 0.10
+# Assurez-vous que la somme des poids est égale à 1 (100%)
+# weight_views + weight_engagements + weight_engagement_rate + weight_followers + weight_time = 1.00
 
 # --- Calcul du score global ---
 global_score = (
+    normalized_views * weight_views +
     normalized_engagements * weight_engagements +
     normalized_engagement_rate * weight_engagement_rate +
     normalized_followers * weight_followers +
@@ -286,7 +292,7 @@ engagement_rate_perf = determine_performance(engagement_rate, engagement_rate_th
 views_perf = determine_performance(views, views_thresholds, views_labels)
 
 # --- Projection pour une performance idéale ---
-# Puisque le seuil de buzz est supprimé, définir des projections basées sur les vues actuelles
+# Définir des projections basées sur les vues actuelles
 ideal_likes = (0.1 * views) if views > 0 else 100
 ideal_comments = (0.05 * views) if views > 0 else 50
 ideal_shares = (0.02 * views) if views > 0 else 20
@@ -310,14 +316,14 @@ with col2:
         # Utilisation de st.columns pour les indicateurs
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
-            st.metric("Nombre total d'engagements", f"{engagements}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_perf}</div>", unsafe_allow_html=True)
-        with col_perf2:
-            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_perf}</div>", unsafe_allow_html=True)
-        with col_perf3:
             st.metric("Nombre de vues", f"{views}")
             st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_perf}</div>", unsafe_allow_html=True)
+        with col_perf2:
+            st.metric("Nombre total d'engagements", f"{engagements}")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_perf}</div>", unsafe_allow_html=True)
+        with col_perf3:
+            st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_perf}</div>", unsafe_allow_html=True)
         with col_perf4:
             st.metric("Nombre d'abonnés", f"{followers}")
 
@@ -345,6 +351,7 @@ with col2:
             <summary><strong>Comment est calculée la performance globale ?</strong></summary>
             <p>La performance globale est calculée en combinant plusieurs métriques clés :</p>
             <ul>
+                <li><strong>Nombre de vues</strong> : Nombre total de vues de la publication.</li>
                 <li><strong>Nombre total d'engagements</strong> : Somme des likes, commentaires et partages.</li>
                 <li><strong>Taux d'engagement</strong> : (Engagements / Vues) * 100.</li>
                 <li><strong>Nombre d'abonnés</strong> : Nombre total d'abonnés de votre profil.</li>
@@ -352,7 +359,7 @@ with col2:
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Engagements / Max Engagements) * 35 + (Taux d'engagement / Max Taux d'engagement) * 30 + (Abonnés / Max Abonnés) * 20 + ((Max heures - Heures écoulées) / Max heures) * 15</p>
+            Performance Globale = (Vues / Max Vues) * 30 + (Engagements / Max Engagements) * 25 + (Taux d'engagement / Max Taux d'engagement) * 20 + (Abonnés / Max Abonnés) * 15 + ((Max heures - Heures écoulées) / Max heures) * 10</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -393,7 +400,7 @@ with col2:
         st.subheader("Conseils pour améliorer la performance")
         if global_score < 50:
             st.markdown("""
-            - **Augmentez vos engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
+            - **Augmentez vos vues et engagements** : Encouragez vos abonnés à liker, commenter et partager vos publications.
             - **Optimisez vos horaires de publication** : Publiez lorsque vos abonnés sont les plus actifs.
             - **Améliorez le contenu** : Publiez du contenu plus interactif et visuellement attrayant.
             - **Utilisez des hashtags pertinents** pour augmenter la visibilité.
@@ -401,7 +408,7 @@ with col2:
             """)
         elif global_score < 70:
             st.markdown("""
-            - **Continuez à engager vos abonnés** : Posez des questions ouvertes pour stimuler les discussions.
+            - **Continuez à augmenter vos vues et engagements** : Posez des questions ouvertes pour stimuler les discussions.
             - **Variez le type de contenu** : Intégrez des vidéos, infographies et autres formats interactifs.
             - **Analysez les performances passées** : Identifiez ce qui fonctionne et ajustez votre stratégie en conséquence.
             - **Utilisez des hashtags de niche** pour toucher une audience plus ciblée.
