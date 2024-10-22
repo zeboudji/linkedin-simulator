@@ -3,8 +3,7 @@ import streamlit as st
 import base64
 from io import BytesIO
 import pandas as pd
-from streamlit_lottie import st_lottie
-import requests
+import altair as alt
 
 # --- Configuration de la page ---
 st.set_page_config(
@@ -24,16 +23,6 @@ def get_image_base64(image_path):
     except Exception as e:
         st.error(f"Erreur lors du chargement du logo : {e}")
         return ""
-
-# --- Fonction pour charger une animation Lottie ---
-def load_lottieurl(url):
-    try:
-        r = requests.get(url)
-        if r.status_code != 200:
-            return None
-        return r.json()
-    except:
-        return None
 
 # --- Chargement et encodage du logo ---
 logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
@@ -108,10 +97,6 @@ performance_colors = {
     "Bon": "#32CD32",        # Vert lime
     "Excellent": "#1E90FF"   # Bleu dodger
 }
-
-# --- Charger l'animation Lottie ---
-lottie_url = "https://assets10.lottiefiles.com/packages/lf20_yr8qcxvg.json"  # Exemple d'URL Lottie
-lottie_animation = load_lottieurl(lottie_url)
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -354,13 +339,25 @@ with col2:
             unsafe_allow_html=True
         )
 
-        st.markdown("<br>", unsafe_allow_html=True)  # Espace avant l'animation
+        st.markdown("<br>", unsafe_allow_html=True)  # Espace avant la bulle d'info
 
-        # Ajout de l'animation Lottie
-        if lottie_animation:
-            st_lottie(lottie_animation, height=200, key="performance_animation")
-        else:
-            st.error("Erreur de chargement de l'animation.")
+        # Visualisation de la Performance Globale
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
 
         # Bulle d'info pour expliquer le calcul de la performance globale
         st.markdown(
@@ -418,6 +415,24 @@ with col2:
 
         st.divider()
 
+        # Visualisation de la Performance Globale avec un Graphique à Gauges
+        st.subheader("Visualisation de la Performance Globale")
+        performance_data = pd.DataFrame({
+            'Métrique': ['Vues', 'Réactions'],
+            'Contribution': [normalized_views * 85, normalized_reactions * 15]
+        })
+
+        chart = alt.Chart(performance_data).mark_bar().encode(
+            x=alt.X('Métrique', sort=None),
+            y='Contribution',
+            color='Métrique'
+        ).properties(
+            width=300,
+            height=200
+        )
+
+        st.altair_chart(chart, use_container_width=True)
+
         # Conseils pour améliorer la performance
         st.subheader("Conseils pour améliorer la performance")
         if global_performance == "Médiocre":
@@ -455,4 +470,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
