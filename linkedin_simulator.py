@@ -24,9 +24,6 @@ def get_image_base64(image_path):
         st.error(f"Erreur lors du chargement du logo : {e}")
         return ""
 
-# --- Chargement et encodage du logo ---
-logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
-
 # --- Fonction pour gérer le compteur de visiteurs avec CountAPI ---
 def increment_counter(namespace, key):
     url = f"https://api.countapi.xyz/hit/{namespace}/{key}"
@@ -54,10 +51,13 @@ def get_counter(namespace, key):
     except:
         return 0
 
+# --- Chargement et encodage du logo ---
+logo_base64 = get_image_base64('linkedin_logo.png')  # Assurez-vous que le chemin vers votre logo est correct
+
 # --- Incrémentation du compteur ---
-namespace = "linkedin_simulator"  # Remplacez par votre propre namespace
-key = "visitors"  # Remplacez par votre propre clé
-visitor_count = increment_counter(namespace, key)
+namespace = "linkedin_simulator"  # Remplacez par votre propre namespace si nécessaire
+key_counter = "visitors"  # Remplacez par votre propre clé si nécessaire
+visitor_count = increment_counter(namespace, key_counter)
 
 # --- Affichage du logo et du titre ---
 st.markdown(
