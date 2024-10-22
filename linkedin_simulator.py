@@ -64,7 +64,7 @@ def sync_input_with_slider(input_key, slider_key):
 def sync_slider_with_input(slider_key, input_key):
     st.session_state[input_key] = st.session_state[slider_key]
 
-# --- Fonction pour déterminer l'indice de performance ---
+# --- Fonction pour déterminer la performance et retourner l'indice ---
 def determine_performance_index(value, thresholds):
     for i, threshold in enumerate(thresholds):
         if value < threshold:
@@ -72,19 +72,19 @@ def determine_performance_index(value, thresholds):
     return len(thresholds)
 
 # --- Définition des seuils et labels pour chaque métrique avec émoticônes ---
-engagements_thresholds = [100, 250, 500, 750]  # Ajusté pour plus de granularité
-engagements_labels = ["😟", "😐", "🙂", "🚀"]  # Faible, Moyen, Bon, Excellent
+engagements_thresholds = [5, 10, 40, 50]  # Faible, Moyen, Bon, Excellent
+engagements_labels = ["😟", "😐", "🙂", "🚀"]
 
-engagement_rate_thresholds = [1, 2, 4, 6]  # En pourcentage
-engagement_rate_labels = ["😕", "👍", "😊", "🚀"]  # À améliorer, Correct, Bon, Excellent
+engagement_rate_thresholds = [1, 2, 4, 10]  # À améliorer, Correct, Bon, Excellent
+engagement_rate_labels = ["😕", "👍", "😊", "🚀"]
 
-views_thresholds = [1000, 2000, 3000, 4000]  # Ajusté pour refléter plus de granularité
-views_labels = ["😟", "👍", "😊", "🔥"]  # Médiocre, Correct, Bon, Vrai buzz!
+views_thresholds = [500, 1000, 3000]  # Médiocre, Correct, Bon, Vrai buzz!
+views_labels = ["😟", "👍", "😊", "🔥"]
 
 # --- Définition des seuils, labels et icônes pour la performance globale ---
-global_performance_thresholds = [35, 60, 80]
-global_performance_labels = ["Médiocre", "Correct", "Bon", "Excellent"]  # Médiocre, Correct, Bon, Excellent
-global_performance_icons = ["😟", "😐", "🙂", "🔥"]  # Correspondants aux labels
+global_performance_thresholds = [35, 60, 80]  # Médiocre, Correct, Bon, Excellent
+global_performance_labels = ["Médiocre", "Correct", "Bon", "Excellent"]
+global_performance_icons = ["😟", "😐", "🙂", "🔥"]
 
 # --- Mise en page en colonnes ---
 col1, col2 = st.columns([1, 1])
@@ -98,7 +98,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=10_000,
+        max_value=50_000,  # Augmenté pour accommoder plus d'abonnés
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -108,7 +108,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,
+        max_value=50_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -122,7 +122,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=10_000,
+        max_value=20_000,  # Augmenté pour accommoder plus de vues
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -132,7 +132,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=10_000,
+        max_value=20_000,
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -238,10 +238,10 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 5000  # Ajusté pour refléter une gamme réaliste
-max_engagements = 1000  # Exemple
+max_views = 10_000  # Augmenté pour accommoder plus de vues
+max_engagements = 2_000  # Augmenté pour accommoder plus d'engagements
 max_engagement_rate = 20  # 20%
-max_followers = 10_000  # Ajusté pour correspondre à la plage d'abonnés
+max_followers = 50_000  # Augmenté pour accommoder plus d'abonnés
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
@@ -252,12 +252,12 @@ normalized_followers = min(followers / max_followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
-# Donner un poids important aux vues et aux engagements
+# Donner un poids important aux vues (80%)
 weight_views = 0.80
 weight_engagements = 0.15
 weight_engagement_rate = 0.03
-weight_followers = 0.015
-weight_time = 0.005
+weight_followers = 0.01
+weight_time = 0.01
 # Assurez-vous que la somme des poids est égale à 1 (100%)
 
 # --- Calcul du score global ---
@@ -299,9 +299,9 @@ performance_colors = {
 performance_color = performance_colors.get(global_performance, "#000000")  # Défaut à noir
 
 # --- Calcul des indicateurs de performance individuels ---
-engagements_perf = determine_performance_index(engagements, engagements_thresholds)
-engagement_rate_perf = determine_performance_index(engagement_rate, engagement_rate_thresholds)
-views_perf = determine_performance_index(views, views_thresholds)
+engagements_perf_index = determine_performance_index(engagements, engagements_thresholds)
+engagement_rate_perf_index = determine_performance_index(engagement_rate, engagement_rate_thresholds)
+views_perf_index = determine_performance_index(views, views_thresholds)
 
 # --- Projection pour une performance idéale ---
 # Définir des projections basées sur les vues actuelles
@@ -329,13 +329,13 @@ with col2:
         col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4)
         with col_perf1:
             st.metric("Nombre de vues", f"{views}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_labels[views_perf]}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{views_labels[views_perf_index]}</div>", unsafe_allow_html=True)
         with col_perf2:
             st.metric("Nombre total d'engagements", f"{engagements}")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_labels[engagements_perf]}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagements_labels[engagements_perf_index]}</div>", unsafe_allow_html=True)
         with col_perf3:
             st.metric("Taux d'engagement", f"{engagement_rate:.2f}%")
-            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_labels[engagement_rate_perf]}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div style='text-align: center; font-size: 1em;'>{engagement_rate_labels[engagement_rate_perf_index]}</div>", unsafe_allow_html=True)
         with col_perf4:
             st.metric("Nombre d'abonnés", f"{followers}")
             st.markdown(f"<div style='text-align: center; font-size: 1em;'>{''}</div>", unsafe_allow_html=True)  # Pas de performance label pour abonnés
@@ -372,7 +372,7 @@ with col2:
             </ul>
             <p>Chaque métrique est normalisée et pondérée pour obtenir un score global sur 100.</p>
             <p><strong>Formule :</strong><br>
-            Performance Globale = (Vues / Max Vues) * 80 + (Engagements / Max Engagements) * 15 + (Taux d'engagement / Max Taux d'engagement) * 3 + (Abonnés / Max Abonnés) * 1.5 + ((Max heures - Heures écoulées) / Max heures) * 0.5</p>
+            Performance Globale = (Vues / Max Vues) * 80 + (Engagements / Max Engagements) * 15 + (Taux d'engagement / Max Taux d'engagement) * 3 + (Abonnés / Max Abonnés) * 1 + ((Max heures - Heures écoulées) / Max heures) * 1</p>
             </details>
             """,
             unsafe_allow_html=True
@@ -387,7 +387,7 @@ with col2:
         # Encadré Stylisé pour la Projection
         st.markdown(
             f"""
-            <div style='background-color: #e6f7ff; border-left: 5px solid #1890ff; padding: 15px; border-radius: 5px;'>
+            <div style='background-color: var(--secondaryBackgroundColor); border-left: 5px solid var(--primaryColor); padding: 15px; border-radius: 5px;'>
                 <div style='display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;'>
                     <div style='text-align: center; flex: 1 1 100px; margin: 10px;'>
                         <span style='font-size: 2em;'>👍</span><br>
