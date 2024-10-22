@@ -98,7 +98,7 @@ with col1:
     st.number_input(
         "Entrez le nombre d'abonnés",
         min_value=0,
-        max_value=50_000,  # Augmenté pour accommoder plus d'abonnés
+        max_value=20_000,  # Augmenté pour accommoder plus d'abonnés
         value=st.session_state.followers,
         step=200,
         key='followers_input',
@@ -108,7 +108,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=50_000,
+        max_value=20_000,
         value=st.session_state.followers,
         step=200,
         key='followers_slider',
@@ -122,7 +122,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de vues",
         min_value=0,
-        max_value=20_000,  # Augmenté pour accommoder plus de vues
+        max_value=10_000,  # Augmenté pour accommoder plus de vues
         value=st.session_state.views,
         step=200,
         key='views_input',
@@ -132,7 +132,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=20_000,
+        max_value=10_000,
         value=st.session_state.views,
         step=500,
         key='views_slider',
@@ -157,7 +157,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de likes",
         min_value=0,
-        max_value=2000,
+        max_value=500,
         value=st.session_state.likes,
         step=1,
         key='likes_input',
@@ -167,7 +167,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=2000,
+        max_value=500,
         value=st.session_state.likes,
         step=1,
         key='likes_slider',
@@ -181,7 +181,7 @@ with col1:
     st.number_input(
         "Entrez le nombre de commentaires",
         min_value=0,
-        max_value=1000,
+        max_value=200,
         value=st.session_state.comments,
         step=1,
         key='comments_input',
@@ -191,7 +191,7 @@ with col1:
     st.slider(
         "",
         min_value=0,
-        max_value=1000,
+        max_value=200,
         value=st.session_state.comments,
         step=1,
         key='comments_slider',
@@ -245,10 +245,10 @@ max_followers = 50_000  # Augmenté pour accommoder plus d'abonnés
 max_hours = 72  # Maximum du slider
 
 # Normaliser chaque métrique
-normalized_views = min(views / max_views, 1)
-normalized_engagements = min(engagements / max_engagements, 1)
+normalized_views = min(views, 1)
+normalized_engagements = min(engagements, 1)
 normalized_engagement_rate = min(engagement_rate / max_engagement_rate, 1)
-normalized_followers = min(followers / max_followers, 1)
+normalized_followers = min(followers, 1)
 normalized_time = min((max_hours - hours_since_posted) / max_hours, 1)  # Plus le temps est court, plus le score est élevé
 
 # --- Attribution des poids ---
