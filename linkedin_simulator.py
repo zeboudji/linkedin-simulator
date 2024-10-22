@@ -233,7 +233,7 @@ engagement_rate = (engagements / views) * 100 if views > 0 else 0
 
 # --- Normalisation des métriques ---
 # Définir des valeurs maximales hypothétiques pour la normalisation
-max_views = 3_000  # Réduit pour augmenter la contribution des vues
+max_views = 1_000  # Réduit pour augmenter la contribution des vues
 max_engagements = 500  # Exemple
 max_engagement_rate = 10  # 20%
 max_followers = 1000  # Exemple
@@ -273,10 +273,10 @@ global_performance = determine_performance(global_score, global_performance_thre
 
 # --- Couleurs associées à chaque catégorie de performance ---
 performance_colors = {
-    "😟": "#FF4B4B",  # Rouge vif
-    "😐": "#FFA500",  # Orange
-    "🙂": "#32CD32",  # Vert lime
-    "🔥": "#1E90FF"   # Bleu dodger
+    "Médiocre 😟": "#FF4B4B",  # Rouge vif
+    "Correct 😐": "#FFA500",  # Orange
+    "Bon🙂": "#32CD32",  # Vert lime
+    "Excellent 🔥": "#1E90FF"   # Bleu dodger
 }
 
 # --- Détermination de la couleur basée sur la performance ---
@@ -292,7 +292,7 @@ views_perf = determine_performance(views, views_thresholds, views_labels)
 
 # --- Projection pour une performance idéale ---
 # Définir des projections basées sur les vues actuelles
-ideal_likes = (0.05 * views) if views > 0 else 100
+ideal_likes = (0.03 * views) if views > 0 else 100
 ideal_comments = (0.02 * views) if views > 0 else 50
 ideal_shares = (0.01 * views) if views > 0 else 20
 
